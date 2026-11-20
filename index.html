@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AquaCheck – คลีนและวิเคราะห์ค่าน้ำเสีย</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Sarabun:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 <style>
 :root{--bg:#eef2f4;--sf:#fff;--ink:#12303d;--mut:#5d7480;--ln:#d5dfe4;--side:#12303d;--sideink:#cfe3ea;--ac:#0f8b8d;--ok:#1f9d63;--bad:#d9542c;--warn:#b57a0a;--okbg:#e2f4ea;--badbg:#fbe6de;--wbg:#fbf0d4;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -144,86 +144,172 @@ main{padding:14px 12px 40px}
 .sign-line{border-bottom:1px dotted var(--mut);height:40px;margin:0 auto 6px;width:75%}
 .rpt-foot{margin-top:22px;padding-top:8px;border-top:1px solid var(--ln);font-size:13px;color:var(--mut);text-align:center}
 @media(max-width:640px){.rpt{padding:22px 14px}.rpt-title{font-size:20px}.kf{grid-template-columns:1fr 1fr}.kf>div:nth-child(2){border-right:0}.kf>div:nth-child(-n+2){border-bottom:1px solid var(--ln)}.rpt .kv th{width:38%}.sign-grid{gap:16px}}
-@page{size:A4 portrait;margin:25mm 20mm 20mm 30mm}
+@page{size:A4 portrait;margin:14mm 14mm 16mm 14mm}
 @media print{
-:root:root:root{--bg:#fff;--sf:#fff;--ink:#000;--mut:#000;--ln:#000;--ac:#000;--ok:#000;--bad:#000;--warn:#000;--okbg:#fff;--badbg:#fff;--wbg:#fff}
-*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-shadow:none!important}
-html,body{background:#fff!important;color:#000!important;font-family:"TH Sarabun New","TH SarabunPSK","Sarabun",serif!important;font-size:16pt!important;line-height:1.45!important;margin:0!important;padding:0!important}
-body{display:block!important}
-/* ซ่อน UI ที่ไม่เกี่ยวกับการพิมพ์ทั้งหมด */
-aside,#tb,#bd,.filters,.foot,.no-print,button,.cd-tools,.cd-legend{display:none!important}
+:root:root:root{--bg:#fff;--sf:#fff;--ink:#111827;--mut:#475569;--ln:#cbd5e1;--ac:#0f8b8d;--ok:#166534;--bad:#991b1b;--warn:#92400e;--okbg:#dcfce7;--badbg:#fee2e2;--wbg:#fef3c7}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+body{display:block!important;background:#fff!important;color:#111827!important;font-size:11pt!important;line-height:1.4!important}
+aside,#tb,#bd,.filters,.foot,.no-print{display:none!important}
 main{max-width:100%!important;width:100%!important;padding:0!important;margin:0!important}
 .print-only{display:block!important}
-span.print-only{display:inline!important}
+.doc-summary-boxes.print-only{display:grid!important;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.doc-header{border-bottom:2px solid #0f172a;padding-bottom:12px;margin-bottom:16px}
+.doc-title-row{display:flex;justify-content:space-between;align-items:flex-start}
+.doc-org{font-size:10pt;font-weight:600;color:#0f8b8d}
+.doc-title{font-size:16pt;font-weight:700;color:#0f172a;margin:2px 0 4px}
+.doc-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;margin-top:10px;padding:10px 12px;background:#f8fafc!important;border:1px solid #cbd5e1;border-radius:6px;font-size:9.5pt}
+.doc-box{border:1px solid #cbd5e1;border-radius:6px;padding:8px 12px;background:#fff!important}
+.doc-box-lbl{font-size:8.5pt;color:#475569}.doc-box-val{font-size:13pt;font-weight:700;color:#0f172a}
+.card{background:#fff!important;border:1px solid #cbd5e1!important;border-radius:6px!important;padding:12px 14px!important;margin-bottom:14px!important;box-shadow:none!important}
+.wrap{overflow:visible!important;max-height:none!important}
+.wrap th,.alist th{position:static!important;box-shadow:none!important}
+.wrap td:first-child,.wrap th:first-child{position:static!important;background:transparent!important;box-shadow:none!important}
+table{width:100%!important;border-collapse:collapse!important;font-size:8.5pt!important}
+tr{break-inside:avoid}
+th,td{white-space:nowrap!important;word-break:keep-all!important;padding:5px 6px!important;border:1px solid #cbd5e1!important;color:#111827!important}
+td.tx{white-space:normal!important;word-break:break-word!important}
+thead{display:table-header-group}
+.card,.doc-header,.doc-summary-boxes,.doc-footer,.fig,table,svg{break-inside:avoid;page-break-inside:avoid}
+.cap{font-size:10pt;margin-top:6px}
+th{background:#f1f5f9!important;color:#0f172a!important;font-weight:700!important}
+.mut{color:#475569!important;font-size:8pt!important}
+.pill{border:1px solid #cbd5e1;padding:1px 6px!important;font-size:7.5pt!important}
+.doc-footer{margin-top:24px;break-inside:avoid}
+.doc-note{font-size:8.5pt;color:#475569;border-top:1px solid #e2e8f0;padding-top:8px;margin-bottom:24px}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;font-size:9.5pt}
+.sign-line{border-bottom:1px dotted #475569;height:36px;margin:0 auto 6px;width:75%}
+.rpt{border:0!important;box-shadow:none!important;padding:0!important;max-width:100%!important;margin:0!important;font-size:10.5pt!important}
+.rpt h2{font-size:12pt!important}
+.rpt table{font-size:8.5pt!important}
+.rpt .dt th,.rpt .kv th{background:#f1f5f9!important;color:#0f172a!important}
+.rpt .kv th,.rpt .kv td,.rpt .dt td.l{white-space:normal!important}
+.verdict,.kf,.sign-grid,.rpt-foot,.rpt .fig{break-inside:avoid}
+.rs.ok{color:#166534!important}.rs.bad{color:#991b1b!important}
+.hi{background:#fee2e2!important;color:#991b1b!important}.mid{background:#fef3c7!important;color:#92400e!important}
+.kf{grid-template-columns:repeat(4,1fr)!important}.kf>div{border-bottom:0!important}
+}
 
-/* โครงสร้างรายงานเอกสารวิชาการ/ราชการไทย */
-.cd{max-width:100%!important;margin:0!important;padding:0!important}
-.cd-head{display:block!important;text-align:center;border-bottom:1.5pt solid #000;padding-bottom:8pt;margin-bottom:12pt}
-.cd-org{font-size:16pt!important;font-weight:700!important;color:#000!important;letter-spacing:0!important}
-.cd-title{font-size:20pt!important;font-weight:700!important;color:#000!important;margin:2pt 0!important;line-height:1.3!important}
-.cd-docno{font-size:14pt!important;color:#000!important}
-
-/* กล่องข้อมูลเมตาและสรุปผลการประเมิน */
-.card{background:#fff!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 0 12pt 0!important}
-.cd-meta{display:grid!important;grid-template-columns:1fr 1fr;gap:2pt 18pt;border:1pt solid #000!important;padding:8pt 12pt!important;margin-bottom:12pt!important}
-.cd-meta>div{border-bottom:0!important;padding:2pt 0!important;font-size:15pt!important;color:#000!important}
-.cd-meta b{color:#000!important;font-weight:700!important;width:auto!important;margin-right:4pt}
-
-.cd-verdict{display:flex!important;align-items:flex-start;gap:10pt;background:#fff!important;border:1.5pt solid #000!important;border-radius:0!important;padding:10pt 14pt!important;margin:10pt 0 12pt 0!important;break-inside:avoid}
-.cd-verdict .cd-vi{width:24pt;height:24pt;font-size:15pt;background:#fff!important;color:#000!important;border:1pt solid #000!important;margin-top:2pt}
-.cd-verdict .cd-vl{font-size:17pt!important;font-weight:700!important;color:#000!important}
-.cd-verdict .cd-vt{font-size:16pt!important;color:#000!important;text-align:justify;text-justify:inter-word}
-
-.cd-kpi{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:0!important;border:1pt solid #000!important;margin-bottom:14pt!important;break-inside:avoid}
-.cd-kpi>div{border:0!important;border-right:1pt solid #000!important;border-radius:0!important;padding:6pt 8pt!important;text-align:center}
-.cd-kpi>div:last-child{border-right:0!important}
-.cd-kpi .v,.cd-kpi .bad .v{font-size:18pt!important;font-weight:700!important;color:#000!important}
-.cd-kpi .v small{font-size:14pt!important;color:#000!important}
-.cd-kpi .t{font-size:14pt!important;color:#000!important}
-
-/* หัวข้อหลักและหัวข้อย่อย */
-.cd-sec{margin-top:16pt!important}
-.cd-sec>h2{font-size:18pt!important;font-weight:700!important;color:#000!important;border-bottom:1pt solid #000!important;padding-bottom:2pt!important;margin:0 0 8pt 0!important;break-after:avoid;page-break-after:avoid}
-.cd-sec>h2::before{display:none!important}
-.cd-card h3{font-size:16pt!important;font-weight:700!important;color:#000!important;margin:8pt 0 4pt 0!important;break-after:avoid}
-
-/* การจัดข้อความ: Justify และย่อหน้าบรรทัดแรก 2.5em */
-.cd p,.cd-find p,.env-p{text-align:justify!important;text-justify:inter-word!important;text-indent:2.5em!important;font-size:16pt!important;line-height:1.45!important;color:#000!important;margin:4pt 0 8pt 0!important}
-
-/* รายการ List แบบทางการ */
-.cd-find ul,.cd-card ol{margin:4pt 0 8pt 0!important;padding-left:2.5em!important;color:#000!important;font-size:16pt!important;line-height:1.45!important}
-.cd-find li,.cd-card li{margin:3pt 0!important;text-align:justify!important;text-justify:inter-word!important}
-.cd-card a{color:#000!important;text-decoration:none!important;font-weight:400!important}
-.cd-2{display:block!important}
-
-/* ตารางกึ่งกลางหน้ากระดาษ + คำบรรยาย "ตารางที่..." และ "ที่มา: ..." */
-.tw{overflow:visible!important;width:100%!important}
-.doc-tbl-cap{text-align:left!important;font-size:16pt!important;color:#000!important;margin:8pt 0 4pt 0!important;break-after:avoid;page-break-after:avoid}
-.cdt{width:100%!important;margin:0 auto!important;border-collapse:collapse!important;font-size:14pt!important;color:#000!important}
-.cdt thead{display:table-header-group}
-.cdt tr{break-inside:avoid;page-break-inside:avoid}
-.cdt th,.cdt td{border:0.75pt solid #000!important;padding:4pt 6pt!important;color:#000!important;background:#fff!important;vertical-align:top!important}
-.cdt th{background:#f2f2f2!important;font-weight:700!important;text-align:center!important}
-.cdt td.w{white-space:normal!important}
-.cdt .mut{font-size:13pt!important;color:#000!important;display:block}
+/* ===== Design v2: tokens, softer surfaces, badges ===== */
+:root{--r:14px;--sh:0 1px 2px #0f2a3a14,0 8px 24px #0f2a3a10}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--sh:0 1px 2px #0007,0 10px 28px #0005}}
+:root[data-theme="dark"]{--sh:0 1px 2px #0007,0 10px 28px #0005}
+body{font-family:"IBM Plex Sans Thai",system-ui,sans-serif}
+.card{border-radius:var(--r);box-shadow:var(--sh)}
+@media(min-width:641px){.card{padding:20px 22px}}
+.row{gap:18px;margin-bottom:18px}
+button{border-radius:10px;padding:10px 18px;box-shadow:0 1px 2px #0f2a3a24;transition:transform .08s,filter .15s,border-color .15s}
+button:hover{filter:brightness(1.07)}button:active{transform:translateY(1px)}
+button.ghost{background:var(--sf);box-shadow:none}button.ghost:hover{border-color:var(--ac);filter:none}
+select,input[type=date],input[type=number]{border-radius:10px;padding:9px 12px;box-shadow:inset 0 1px 2px #0f2a3a0d}
+.filters{border-radius:var(--r);box-shadow:var(--sh);gap:16px 18px;padding:16px 20px}
+.tabs button{border-radius:99px;box-shadow:none}
+.alert{border-radius:var(--r)}
+aside a{border-radius:10px}
+.std{border-radius:var(--r)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:99px;font-size:12.5px;font-weight:600;line-height:1.5;white-space:nowrap}
+.pill::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.na{background:var(--ln);color:var(--mut)}
+.pill.nd{background:transparent;border:1px dashed var(--ln);color:var(--mut);opacity:.85}
+/* clean page */
+.cl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.cdet{margin-bottom:16px}.cdet summary{cursor:pointer;font-weight:600}.cdet table{margin-top:10px}
+.cdet td.z{color:var(--mut)}
+@media(max-width:640px){.cl3{grid-template-columns:1fr}}
+/* ===== Compliance dashboard ===== */
+.cd{max-width:980px;margin:0 auto}
+.cd-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 20px;align-items:flex-start;margin-bottom:14px}
+.cd-org{font-size:13px;font-weight:600;color:var(--ac);letter-spacing:.04em}
+.cd-title{font-size:26px;font-weight:700;line-height:1.3;margin:2px 0 4px}
+.cd-docno{font-size:13px;color:var(--mut)}
+.cd-tools{display:flex;gap:10px;flex-wrap:wrap}
+.cd-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px;padding-top:8px;padding-bottom:8px}
+.cd-meta>div{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--ln);font-size:14px;min-width:0}
+.cd-meta>div:nth-last-child(-n+2){border-bottom:0}
+.cd-meta b{flex:none;width:128px;color:var(--mut);font-weight:500}
+.cd-meta span{min-width:0;overflow-wrap:anywhere}
+.cd-verdict{display:flex;gap:18px;align-items:center;padding:20px 24px;border-radius:var(--r);margin:18px 0 14px;border:1.5px solid var(--ln);background:var(--sf);box-shadow:var(--sh)}
+.cd-verdict.ok{background:var(--okbg);border-color:var(--ok)}.cd-verdict.bad{background:var(--badbg);border-color:var(--bad)}
+.cd-vi{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff;background:var(--mut)}
+.cd-verdict.ok .cd-vi{background:var(--ok)}.cd-verdict.bad .cd-vi{background:var(--bad)}
+.cd-vl{font-size:24px;font-weight:700;line-height:1.25}.cd-verdict.ok .cd-vl{color:var(--ok)}.cd-verdict.bad .cd-vl{color:var(--bad)}
+.cd-vt{font-size:15px}
+.cd-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:6px}
+.cd-kpi>div{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);box-shadow:var(--sh);padding:16px 18px}
+.cd-kpi .v{font-size:28px;font-weight:700;line-height:1.2}.cd-kpi .v small{font-size:14px;font-weight:500;color:var(--mut)}
+.cd-kpi .t{font-size:13px;color:var(--mut)}.cd-kpi .bad .v{color:var(--bad)}
+.cd-sec{margin-top:26px}
+.cd-sec>h2{font-size:18px;font-weight:700;margin:0 0 12px;display:flex;gap:10px;align-items:center}
+.cd-sec>h2::before{content:"";width:4px;height:20px;border-radius:2px;background:var(--ac)}
+.cd-find ul{margin:4px 0 0;padding-left:20px}.cd-find li{margin:7px 0}
+.cd-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.cd-2 .span2{grid-column:1/-1}
+.cd-card h3{font-size:15px;margin:0 0 8px}
+.kvr{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px dashed var(--ln);font-size:14px}
+.kvr:last-child{border-bottom:0}.kvr>span:first-child{color:var(--mut)}.kvr>span:last-child{text-align:right;overflow-wrap:anywhere}
+.cd-card ol{margin:0;padding-left:20px;font-size:14px}.cd-card li{margin:6px 0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cdt{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+.cdt th{font-size:12.5px;font-weight:600;color:var(--mut);background:var(--bg);padding:10px 12px;border-bottom:1px solid var(--ln);white-space:nowrap;text-align:left}
+.cdt th:first-child{border-top-left-radius:10px}.cdt th:last-child{border-top-right-radius:10px}
+.cdt td{padding:11px 12px;border-bottom:1px solid var(--ln);vertical-align:middle;white-space:nowrap}
+.cdt td.w{white-space:normal;min-width:150px}
+.cdt th.n,.cdt td.n{text-align:right;font-variant-numeric:tabular-nums}
+.cdt tbody tr:last-child td{border-bottom:0}
+.cdt tr.nd td{opacity:.5}
+.cdt tr.x td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+.cdt .mut{display:block;font-size:12px;line-height:1.3}
+.cd-legend{font-size:12.5px;color:var(--mut);margin-top:10px}
+.rb{position:relative;height:18px;min-width:150px;background:var(--ln);border-radius:9px;overflow:hidden}
+.rb .zn{position:absolute;top:0;bottom:0;background:var(--ok);opacity:.3}
+.rb .lm{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--ink)}
+.rb .rg{position:absolute;top:6px;height:6px;border-radius:3px;background:var(--mut);opacity:.55}
+.rb .mn{position:absolute;top:2px;width:14px;height:14px;margin-left:-7px;border-radius:50%;border:2px solid var(--sf);background:var(--mut)}
+.rb .mn.ok{background:var(--ok)}.rb .mn.bad{background:var(--bad)}
+.pb{display:flex;align-items:center;gap:8px;min-width:130px}.pb>div{flex:1;height:10px;border-radius:5px;background:var(--ln);overflow:hidden}.pb i{display:block;height:100%;border-radius:5px}
+.pb span{font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.hm{border-collapse:separate;border-spacing:4px;width:100%;font-size:13.5px}
+.hm th{background:transparent;font-size:12.5px;color:var(--mut);padding:4px 6px;text-align:center;white-space:nowrap}
+.hm th:first-child,.hm td:first-child{text-align:left}
+.hm td{border-radius:8px;text-align:center;padding:9px 6px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hm td:first-child{font-weight:500;background:transparent;padding-left:2px}
+.h0{background:var(--okbg);color:var(--ok)}.h1{background:var(--wbg);color:var(--warn)}.h2{background:var(--badbg);color:var(--bad)}.hn{color:var(--mut);font-weight:400!important}
+.cd-fig{margin-top:14px}.cd-fig svg{max-width:760px;display:block;margin:0 auto}
+.cd-sign{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.sg{border:1px solid var(--ln);border-radius:var(--r);padding:16px 20px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;background:var(--sf)}
+.sg .ln{border-bottom:1px solid var(--mut);height:48px;margin:0 auto 8px;width:80%}
+.sg b{font-weight:600}.sg .mut{margin-top:2px}
+.cd-foot{margin-top:22px;padding-top:10px;border-top:1px solid var(--ln);font-size:13px;color:var(--mut);text-align:center}
+@media(max-width:760px){.cd-kpi{grid-template-columns:1fr 1fr}.cd-meta{grid-template-columns:1fr}.cd-meta>div:nth-last-child(2){border-bottom:1px solid var(--ln)}.cd-2,.cd-sign{grid-template-columns:1fr}.cd-title{font-size:21px}.cd-verdict{padding:16px;gap:14px}.cd-vl{font-size:20px}.cd-vi{width:44px;height:44px;font-size:22px}}
+@media print{
+.cd{max-width:100%}
+.cd-head{margin-bottom:8px}.cd-title{font-size:17pt}.cd-org{font-size:9pt}.cd-docno{font-size:8.5pt}
+.cd-meta{display:grid!important;grid-template-columns:1fr 1fr;padding:6px 10px!important}.cd-meta>div{font-size:9pt;padding:4px 0}.cd-meta b{width:92px}
+.cd-org{color:#111827!important}
+.cd-verdict{box-shadow:none;padding:10px 14px;margin:10px 0;gap:12px;background:#fff!important;border:1.5px solid #0f172a!important}
+.cd-verdict .cd-vi{background:#f1f5f9!important;color:#0f172a!important;border:1px solid #94a3b8!important}
+.cd-verdict .cd-vl,.cd-kpi .bad .v{color:#0f172a!important}
+.cd-sec>h2{border-bottom:1px solid #cbd5e1;padding-bottom:4px}.cd-sec>h2::before{background:#0f172a!important}
 .cdt tr.x td:first-child{box-shadow:none!important}
-.cdt td[style*="var(--bad)"]{color:#000!important;font-weight:700!important;text-decoration:underline}
-
-/* ป้ายสถานะในตารางพิมพ์แบบขาวดำเรียบ */
-.pill,.pill.ok,.pill.bad,.pill.warn,.pill.na,.pill.nd{background:transparent!important;color:#000!important;border:0!important;padding:0!important;font-size:14pt!important;font-weight:400!important;opacity:1!important}
-.pill.bad{font-weight:700!important}
+.pill,.pill.ok,.pill.bad,.pill.warn,.pill.na{background:transparent!important;color:#111827!important;border:1px solid #94a3b8!important}
 .pill::before{display:none!important}
-
-/* รูปภาพ / กราฟกึ่งกลางหน้ากระดาษ + คำบรรยาย "ภาพที่..." และ "ที่มา: ..." (คงสีกราฟตามเดิม) */
-.cd-fig{text-align:center!important;margin:12pt auto!important;break-inside:avoid;page-break-inside:avoid}
-.cd-fig svg{display:block!important;margin:0 auto!important;max-width:92%!important;height:auto!important;--ac:#0f8b8d;--bad:#c62828;--ok:#1f9d63;--ln:#cbd5e1;--mut:#334155}
-.cd-fig svg text{font-family:"TH Sarabun New","Sarabun",sans-serif!important;fill:#1e293b!important}
-.leg{justify-content:center!important;font-size:14pt!important;color:#000!important;margin-top:4pt!important}
-.doc-fig-cap{text-align:center!important;font-size:16pt!important;color:#000!important;margin:6pt 0 2pt 0!important;break-before:avoid}
-.doc-src{text-align:left!important;font-size:14pt!important;color:#000!important;margin:3pt 0 8pt 0!important;font-style:normal}
-
-.cd-foot{margin-top:16pt!important;padding-top:6pt!important;border-top:0.75pt solid #000!important;font-size:14pt!important;color:#000!important;text-align:center!important;break-inside:avoid}
-.cl3,.chips,.cdet{display:none!important}
+.cdt td[style*="var(--bad)"]{color:#111827!important;text-decoration:underline}
+.cd-fig svg{--ac:#0f8b8d;--bad:#d9542c;--ok:#1f9d63;--ln:#cbd5e1;--mut:#475569}
+.cd-kpi{gap:8px}.cd-kpi>div{box-shadow:none;padding:8px 10px;border:1px solid #cbd5e1}.cd-kpi .v{font-size:15pt}.cd-kpi .t{font-size:8pt}
+.cd-sec{margin-top:14px}.cd-sec>h2{font-size:12.5pt;margin-bottom:8px;break-after:avoid;page-break-after:avoid}
+.cd-verdict,.cd-kpi>div,.cd-sec,.cd-card,.cd-find,.sg,.cd-fig,.cd-foot{break-inside:avoid;page-break-inside:avoid}
+.cd-sec.cd-keep{break-inside:auto}
+.cd-2{gap:10px}.cd-card h3{font-size:10.5pt}.kvr{font-size:8.5pt;padding:4px 0}.cd-card ol{font-size:8.5pt}
+.cdt th,.cdt td{border:0!important;border-bottom:1px solid #cbd5e1!important;padding:4px 6px!important;font-size:8.5pt}
+.cdt th{background:#f1f5f9!important}
+.cdt td.w{white-space:normal!important}
+.cdt .mut{font-size:7.5pt!important}
+.rb{min-width:110px;height:14px}.rb .mn{top:0;width:12px;height:12px}.rb .rg{top:4px}
+.hm td,.hm th{border:0!important}.hm td{padding:5px 4px!important}
+.hm td.h0,.hm td.h1,.hm td.h2{color:#111827!important}
+.sg{min-height:110px;padding:10px 14px}.sg .ln{height:34px}
+.tw{overflow:visible}
+.pb{min-width:90px}
+.cl3,.chips,.cdet{display:none}
 }
 </style>
 </head>
@@ -459,15 +545,15 @@ const miniW=()=>{const n=innerWidth>900?3:innerWidth>640?2:1;return Math.max(240
 const miniH=()=>Math.max(170,Math.round(miniW()*.5));
 const bigW=()=>Math.max(280,Math.min(1100,innerW()-42));
 const bigH=()=>{const w=bigW();return w<520?270:Math.min(400,Math.round(w*.42))};
-const PAL=["#0f8b8d","#1f6fd1","#7a5cc7","#2e9d5b","#e0a100","#c2437f","#00a3c4","#8c5a2b","#546e7a","#3949ab"];
+const PAL=["#0f8b8d","#d9542c","#7a5cc7","#e0a100","#1f6fd1","#2e9d5b","#c2437f","#6b7a86","#8c5a2b","#00a3c4"];
 const DASH=["","7 4","2 3","10 4 2 4","12 4","4 3 1 3"];
-const sc=s=>st.sites.length>1?PAL[st.sites.indexOf(s)%PAL.length]:"#0f8b8d";
-const sdsh=(s,cnt)=>cnt>1?DASH[st.sites.indexOf(s)%DASH.length]:"";
+const sc=s=>st.sites.length>1?PAL[st.sites.indexOf(s)%PAL.length]:"var(--ac)";
+const sdsh=s=>st.sites.length>1?DASH[st.sites.indexOf(s)%DASH.length]:"";
 function msr(k,rows,day){
  const ss=st.f.site?[st.f.site]:st.sites,tot=rows.reduce((a,o)=>a+(o[k]!=null?1:0),0);
  return ss.map(s=>({site:s,pts:series(k,rows.filter(o=>o.site==s),day||tot>800)})).filter(x=>x.pts.length);
 }
-const legend=sr=>sr.length>1?'<div class="leg">'+sr.map(x=>{const d=sdsh(x.site,sr.length);return `<span><svg width="22" height="6" style="vertical-align:middle;margin-right:5px"><line x1="0" y1="3" x2="22" y2="3" stroke="${sc(x.site)}" stroke-width="2.4"${d?` stroke-dasharray="${d}"`:""}/></svg>${esc(x.site)}</span>`}).join("")+'</div>':"";
+const legend=sr=>sr.length>1?'<div class="leg">'+sr.map(x=>{const d=sdsh(x.site);return `<span><svg width="22" height="6" style="vertical-align:middle;margin-right:5px"><line x1="0" y1="3" x2="22" y2="3" stroke="${sc(x.site)}" stroke-width="2.4"${d?` stroke-dasharray="${d}"`:""}/></svg>${esc(x.site)}</span>`}).join("")+'</div>':"";
 const cb=(k,rows,w,h,mini)=>{const sr=msr(k,rows,mini);return chart(sr,k,w,h,mini)+legend(sr)};
 function chart(sr,k,w,h,mini,zm){
  if(!sr.length)return '<div class="mut" style="padding:28px 0">ไม่มีข้อมูลของพารามิเตอร์นี้ในช่วงที่เลือก</div>';
@@ -487,8 +573,8 @@ function chart(sr,k,w,h,mini,zm){
  s+=`<line x1="${g.l}" x2="${g.l}" y1="${g.t}" y2="${h-g.b}" stroke="var(--mut)"/><line x1="${g.l}" x2="${w-g.r}" y1="${h-g.b}" y2="${h-g.b}" stroke="var(--mut)"/>`;
  s+=`<text x="${(g.l+w-g.r)/2}" y="${h-5}" text-anchor="middle" style="font-weight:600">วันที่</text><text transform="rotate(-90)" x="${-(g.t+h-g.b)/2}" y="13" text-anchor="middle" style="font-weight:600">${k}${P[k].u?" ("+P[k].u+")":""}</text>`;
  if(zm)s+='<g clip-path="url(#czc)">';
- (uni?ls.slice(0,1):ls).forEach(x=>{if(x.l)x.l.forEach(v=>{if(v!=null)s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${uni?"#c62828":sc(x.z.site)}" stroke-dasharray="${uni?"6 4":"2 4"}" stroke-width="${uni?1.5:1.2}"/>`})});
- sr.forEach(z=>{const c=sc(z.site),dsh=sdsh(z.site,sr.length);
+ (uni?ls.slice(0,1):ls).forEach(x=>{if(x.l)x.l.forEach(v=>{if(v!=null)s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${uni?"var(--bad)":sc(x.z.site)}" stroke-dasharray="${uni?"6 4":"2 4"}" stroke-width="${uni?1.4:1.2}"/>`})});
+ sr.forEach(z=>{const c=sc(z.site),dsh=sdsh(z.site);
   s+=`<polyline fill="none" stroke="${c}" stroke-width="${mini?1.5:1.9}"${dsh?` stroke-dasharray="${dsh}"`:""} stroke-linejoin="round" points="${z.pts.map(p=>X(p.x).toFixed(1)+","+Y(p.v).toFixed(1)).join(" ")}"/>`;
   if(z.pts.length==1)s+=`<circle cx="${X(z.pts[0].x).toFixed(1)}" cy="${Y(z.pts[0].v).toFixed(1)}" r="3" fill="${c}"/>`;
   if(!mini)z.pts.forEach(p=>{if(p.ex)s+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="3.4" fill="var(--bad)"><title>${esc(z.site)} ${fx(p.x,0)}: ${fmt(p.v,2)}</title></circle>`})});
@@ -742,8 +828,7 @@ V.compliance=()=>{
  const info=K.map((k,i)=>{const s=(items.find(x=>x.k==k)||{}).s,t=!s?"nd":!anyLim(k)?"na":s.ex>0?"bad":"ok";return {k,s,t,i}}).sort((a,b)=>ord[a.t]-ord[b.t]||(a.t=="bad"?b.s.pct-a.s.pct:a.i-b.i));
  const bdg=t=>t=="bad"?'<span class="pill bad">เกินเกณฑ์</span>':t=="ok"?'<span class="pill ok">ผ่านเกณฑ์</span>':t=="na"?'<span class="pill na">ไม่มีเกณฑ์ในมาตรฐานนี้</span>':'<span class="pill nd">ไม่มีข้อมูลในไฟล์</span>';
  const mrow=({k,s,t})=>`<tr class="${t=="nd"?"nd":t=="bad"?"x":""}"><td class="w"><b>${k}</b><span class="mut">${P[k].n}${P[k].u?" · "+P[k].u:""}</span></td><td>${bdg(t)}</td><td>${limTxt(k)}</td><td class="n">${s?fmt(s.mean,2):"–"}</td><td class="n">${s?fmt(s.min,2):"–"}</td><td class="n">${s?fmt(s.max,2):"–"}</td><td class="n">${s?s.n.toLocaleString():"–"}</td><td class="n">${s&&anyLim(k)?s.ex.toLocaleString()+" ("+fmt(s.pct,1)+"%)":"–"}</td></tr>`;
- const srcCite=`ที่มา: ตรวจวัดจากแหล่งข้อมูล ${esc(st.fn||"-")} (${thd(st.f.from)} – ${thd(st.f.to)}) เทียบกับ${esc(stdTxt)}`;
- const s3=`<section class="cd-sec cd-keep"><h2><span class="print-only">๑. </span>ผลการเปรียบเทียบรายพารามิเตอร์ (ครบ ${K.length} พารามิเตอร์)</h2><div class="card"><div class="print-only doc-tbl-cap"><b>ตารางที่ ๑</b> ผลการเปรียบเทียบค่าคุณภาพน้ำรายพารามิเตอร์กับเกณฑ์มาตรฐาน</div><div class="tw"><table class="cdt"><thead><tr><th>พารามิเตอร์</th><th>สถานะ</th><th>เกณฑ์ (หน่วยตามมาตรฐาน)</th><th class="n">เฉลี่ย</th><th class="n">ต่ำสุด</th><th class="n">สูงสุด</th><th class="n">ตัวอย่าง</th><th class="n">เกินเกณฑ์</th></tr></thead><tbody>${info.map(mrow).join("")}</tbody></table></div><div class="cd-legend">เรียงพารามิเตอร์ที่เกินเกณฑ์ไว้ลำดับต้นของตาราง</div><div class="print-only doc-src">${srcCite}</div></div></section>`;
+ const s3=`<section class="cd-sec cd-keep"><h2>ผลการเปรียบเทียบรายพารามิเตอร์ (ครบ ${K.length} พารามิเตอร์)</h2><div class="card"><div class="tw"><table class="cdt"><thead><tr><th>พารามิเตอร์</th><th>สถานะ</th><th>เกณฑ์ (หน่วยตามมาตรฐาน)</th><th class="n">เฉลี่ย</th><th class="n">ต่ำสุด</th><th class="n">สูงสุด</th><th class="n">ตัวอย่าง</th><th class="n">เกินเกณฑ์</th></tr></thead><tbody>${info.map(mrow).join("")}</tbody></table></div><div class="cd-legend">เรียงพารามิเตอร์ที่เกินเกณฑ์ไว้ลำดับต้นของตาราง</div></div></section>`;
  // --- environmental explanation & time-series figures from overview
  const ENV_DESC={
   pH:"บ่งชี้ความเป็นกรด-ด่างของแหล่งน้ำ ซึ่งส่งผลโดยตรงต่อสมดุลเคมีและการดำรงชีวิตของสัตว์น้ำ รวมถึงความเป็นพิษของแอมโมเนียและโลหะหนักในน้ำ",
@@ -770,19 +855,18 @@ V.compliance=()=>{
  const figs=items.map((x,idx)=>{
   const sr=msr(x.k,rows,true),svg=chart(sr,x.k,Math.min(720,bigW()),240,false)+legend(sr);
   const cmpTxt=multi?`เปรียบเทียบค่า ${x.k} (${P[x.k].n}) ระหว่างจุดตรวจวัดในช่วง ${thd(st.f.from)} ถึง ${thd(st.f.to)}`:`แสดงแนวโน้มและเปรียบเทียบค่า ${x.k} (${P[x.k].n}) กับเกณฑ์มาตรฐานในช่วง ${thd(st.f.from)} ถึง ${thd(st.f.to)}`;
-  return `<div class="card cd-fig"><div class="no-print"><b>กราฟที่ ${idx+1}</b> แสดง${cmpTxt}</div>${svg}<div class="print-only doc-fig-cap"><b>ภาพที่ ${idx+1}</b> แสดง${cmpTxt}</div><div class="print-only doc-src">${srcCite}</div><p class="env-p" style="margin:10px 0 0;font-size:14.5px;line-height:1.65"><b>คำอธิบายเชิงสิ่งแวดล้อม:</b> ${envExplain(x)}</p></div>`;
+  return `<div class="card cd-fig"><b>กราฟที่ ${idx+1}</b> แสดง${cmpTxt}${svg}<p style="margin:10px 0 0;font-size:14.5px;line-height:1.65"><b>คำอธิบายเชิงสิ่งแวดล้อม:</b> ${envExplain(x)}</p></div>`;
  }).join("");
- const s4=figs?`<section class="cd-sec"><h2><span class="print-only">๒. </span>กราฟแนวโน้มและการประเมินผลเชิงสิ่งแวดล้อม</h2>${figs}</section>`:"";
+ const s4=figs?`<section class="cd-sec"><h2>กราฟแนวโน้มและการประเมินผลเชิงสิ่งแวดล้อม</h2>${figs}</section>`:"";
  // --- multi-site
  let s5="";
  if(multi){
   const dot=x=>`<i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${sc(x)};margin-right:8px"></i>`;
   const sb=x=>x.pct==null?'<span class="pill na">ไม่มีเกณฑ์</span>':x.pct>0?'<span class="pill bad">เกินเกณฑ์</span>':'<span class="pill ok">ผ่านเกณฑ์</span>';
   const hc=p=>p==null?'<td class="hn">–</td>':`<td class="${p>=5?"h2":p>0?"h1":"h0"}">${fmt(p,1)}%</td>`;
-  s5=`<section class="cd-sec cd-keep"><h2><span class="print-only">๓. </span>วิเคราะห์เปรียบเทียบรายจุดตรวจวัด</h2>
-  <div class="card"><div class="no-print"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (ทุกสถานีในช่วงวันที่ที่เลือก)</span></div><div class="print-only doc-tbl-cap"><b>ตารางที่ ๒</b> การจัดอันดับจุดตรวจวัดตามสัดส่วนค่าที่เกินเกณฑ์มาตรฐาน</div><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>อันดับ</th><th>จุดตรวจวัด</th><th>สถานะ</th><th>มาตรฐาน</th><th class="n">ค่าที่มีเกณฑ์</th><th class="n">เกินเกณฑ์</th><th class="n">สัดส่วนที่เกิน</th><th class="n">วันที่เกิน</th><th>พารามิเตอร์ที่เกิน</th></tr></thead><tbody>${R.map((x,i)=>`<tr class="${i==0&&x.pct>0?"x":""}"><td>${x.pct==null?"–":i+1}</td><td class="w">${dot(x.si)}<b>${esc(x.si)}</b>${i==0&&x.pct>0?' <span class="pill bad">วิกฤตที่สุด</span>':""}</td><td>${sb(x)}</td><td class="w">${S[stdOf(x.si)].n}</td><td class="n">${x.n.toLocaleString()}</td><td class="n">${x.pct==null?"–":x.ex.toLocaleString()}</td><td class="n">${x.pct==null?"–":`<b>${fmt(x.pct,1)}%</b>`}</td><td class="n">${x.pct==null?"–":x.days}</td><td class="w">${x.bad.length?x.bad.map(k=>`<span class="pill bad" style="margin:2px 4px 2px 0">${k} ${fmt(x.pr[k].pct,1)}%</span>`).join(""):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div></div>
-<div class="print-only doc-src">${srcCite}</div></div>
-  <div class="card" style="margin-top:16px"><div class="no-print"><b>ค่าเฉลี่ยแยกตามจุดตรวจวัด</b> <span class="mut">ตัวหนาสีแดง = เกินเกณฑ์</span></div><div class="print-only doc-tbl-cap"><b>ตารางที่ ๓</b> ค่าเฉลี่ยคุณภาพน้ำแยกตามจุดตรวจวัด</div><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th class="n">${k}</th>`).join("")}</tr></thead><tbody>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td class="w">${esc(si)}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td class="n" style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:700":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</tbody></table></div><div class="print-only doc-src">${srcCite}</div></div></section>`;
+  s5=`<section class="cd-sec cd-keep"><h2>วิเคราะห์เปรียบเทียบรายจุดตรวจวัด</h2>
+  <div class="card"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (ทุกสถานีในช่วงวันที่ที่เลือก)</span><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>อันดับ</th><th>จุดตรวจวัด</th><th>สถานะ</th><th>มาตรฐาน</th><th class="n">ค่าที่มีเกณฑ์</th><th class="n">เกินเกณฑ์</th><th class="n">สัดส่วนที่เกิน</th><th class="n">วันที่เกิน</th><th>พารามิเตอร์ที่เกิน</th></tr></thead><tbody>${R.map((x,i)=>`<tr class="${i==0&&x.pct>0?"x":""}"><td>${x.pct==null?"–":i+1}</td><td class="w">${dot(x.si)}<b>${esc(x.si)}</b>${i==0&&x.pct>0?' <span class="pill bad">วิกฤตที่สุด</span>':""}</td><td>${sb(x)}</td><td class="w">${S[stdOf(x.si)].n}</td><td class="n">${x.n.toLocaleString()}</td><td class="n">${x.pct==null?"–":x.ex.toLocaleString()}</td><td class="n">${x.pct==null?"–":`<b>${fmt(x.pct,1)}%</b>`}</td><td class="n">${x.pct==null?"–":x.days}</td><td class="w">${x.bad.length?x.bad.map(k=>`<span class="pill bad" style="margin:2px 4px 2px 0">${k} ${fmt(x.pr[k].pct,1)}%</span>`).join(""):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div></div>
+  <div class="card" style="margin-top:16px"><b>ค่าเฉลี่ยแยกตามจุดตรวจวัด</b> <span class="mut">ตัวหนาสีแดง = เกินเกณฑ์</span><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th class="n">${k}</th>`).join("")}</tr></thead><tbody>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td class="w">${esc(si)}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td class="n" style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:700":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</tbody></table></div></div></section>`;
  }
  // --- metadata cards + sign-off
  const rm=(cn.dup||0)+(cn.badDate||0)+(cn.empty||0)+(cn.conf||0),cl=(cn.neg||0)+(cn.rng||0)+(cn.txt||0);
@@ -791,7 +875,7 @@ V.compliance=()=>{
  [...new Set(used.map(k=>S[k].note).filter(Boolean))].forEach(n=>notes.push(esc(n)));
  const nt=`<div class="card cd-card span2"><h3>หมายเหตุข้อกำหนดและข้อจำกัด</h3><ol>${notes.map(n=>`<li>${n}</li>`).join("")}</ol></div>`;
  const rf=`<div class="card cd-card span2"><h3>เอกสารอ้างอิง</h3>${usedSrc.length?`<ol>${usedSrc.map(k=>`<li><a href="${esc(SRC[k].url)}" target="_blank" rel="noopener noreferrer" style="color:var(--ac);font-weight:600;text-decoration:underline">${esc(SRC[k].t)} ↗</a><span class="mut" style="display:block">${esc(SRC[k].m)}</span></li>`).join("")}</ol>`:'<div class="mut">ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีเอกสารอ้างอิงในระบบ</div>'}</div>`;
- const s6=`<section class="cd-sec"><h2><span class="print-only">${multi?"๔. ":"๓. "}</span>ข้อมูลประกอบรายงาน</h2><div class="cd-2">${nt}${rf}</div></section>`;
+ const s6=`<section class="cd-sec"><h2>ข้อมูลประกอบรายงาน</h2><div class="cd-2">${nt}${rf}</div></section>`;
  const head=`<header class="cd-head"><div><div class="cd-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><h1 class="cd-title">รายงานผลการตรวจวัดและประเมินคุณภาพน้ำเชิงสิ่งแวดล้อม</h1><div class="cd-docno">เลขที่รายงาน ${docNo} · ออกรายงาน ${thd(iso)} เวลา <span style="white-space:nowrap">${hm} น.</span></div></div><div class="cd-tools no-print"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลด Excel (.xlsx)</button></div></header>
   <div class="card cd-meta"><div><b>แหล่งข้อมูล</b><span>${esc(st.fn||"-")}</span></div><div><b>จุดตรวจวัด</b><span>${siteLabel}</span></div><div><b>ช่วงวันที่</b><span>${thd(st.f.from)} ถึง ${thd(st.f.to)}</span></div><div><b>มาตรฐานอ้างอิง</b><span>${esc(stdTxt)}</span></div></div>`;
  const kpi=[["จำนวนตัวอย่าง",rows.length.toLocaleString(),""],["พารามิเตอร์ที่มีเกณฑ์",`${limited.length}<small> / ${items.length} ที่ตรวจวัด</small>`,""],["พารามิเตอร์ที่เกินเกณฑ์",badItems.length,badItems.length?"bad":""],["สัดส่วนค่าที่เกินเกณฑ์รวม",totN?fmt(totE/totN*100,1)+"%":"–",totE?"bad":""]];

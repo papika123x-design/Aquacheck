@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AquaCheck – คลีนและวิเคราะห์ค่าน้ำเสีย</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap">
 <style>
 :root{--bg:#eef2f4;--sf:#fff;--ink:#12303d;--mut:#5d7480;--ln:#d5dfe4;--side:#12303d;--sideink:#cfe3ea;--ac:#0f8b8d;--ok:#1f9d63;--bad:#d9542c;--warn:#b57a0a;--okbg:#e2f4ea;--badbg:#fbe6de;--wbg:#fbf0d4;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -63,7 +63,17 @@ aside{overflow-y:auto}#theme{font-size:13px;padding:8px}
 html{-webkit-text-size-adjust:100%}
 #tb,#bd{display:none}
 .wrap td:first-child,.wrap th:first-child{position:sticky;left:0;background:var(--sf);z-index:1;box-shadow:1px 0 0 var(--ln)}
-.wrap{-webkit-overflow-scrolling:touch}
+.wrap{-webkit-overflow-scrolling:touch;max-height:min(72vh,560px);overflow:auto}
+.wrap th,.alist th{position:sticky;top:0;z-index:2;background:var(--sf);box-shadow:0 1px 0 var(--ln)}
+.wrap th:first-child{z-index:4}
+.alist th{background:var(--badbg)}
+.card{min-width:0}
+.wcard>b,.wcard>.mut{position:static}
+#pv .wrap td:first-child{position:static;box-shadow:none;white-space:normal;min-width:140px}
+#pv .wrap th:first-child{left:auto;box-shadow:0 1px 0 var(--ln)}
+#pv .wrap{max-height:none;overflow-x:auto}
+#pv .wrap th{position:static;box-shadow:0 1px 0 var(--ln);white-space:normal}
+#pv{overflow:hidden}
 @media(max-width:1023px){
 body{flex-direction:column;font-size:16px}
 #tb{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;background:var(--side);color:#fff;padding:8px 14px}
@@ -83,14 +93,57 @@ main{padding:14px 12px 40px}
 .c3,.c2{grid-template-columns:1fr}
 .card{padding:14px 14px}
 .big{font-size:26px}h1{font-size:22px}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.filters{display:grid;gap:12px}
 .filters>div:first-child{grid-column:1/-1}
-.filters select,.filters input{width:100%}
+.filters>*{min-width:0}
+.filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.filters label{min-width:0}
+.filters select,.filters input{width:100%;min-width:0}
+.filters input[type=date]{-webkit-appearance:none;appearance:none;display:block;padding:7px 8px;font-size:15px;text-align:left}
+.filters .srcbtn{grid-column:1/-1}
 .foot button{flex:1 1 auto}
 }
 
 /* ===== พิมพ์ / บันทึก PDF (A4) ===== */
+.cap{text-align:center;margin-top:8px;font-size:14px}.fig svg{max-width:760px;display:block;margin:0 auto}
+#md{position:fixed;inset:0;background:#0008;z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
+#md .card{max-width:820px;width:100%;margin-top:3vh}#md p{margin:10px 0}
+.subpick{margin:-4px 0 12px 26px;padding:10px 14px;border-left:3px solid var(--ac)}
+.subpick label{display:flex;gap:8px;padding:6px 0;cursor:pointer;align-items:flex-start}.subpick input{margin-top:5px;accent-color:var(--ac)}
+.subpick details{margin-top:8px}.subpick summary{cursor:pointer;color:var(--ac);font-weight:600}
 .print-only{display:none}
+
+/* ===== รายงานสรุป (ทางการ) ===== */
+.rpt{background:var(--sf);color:var(--ink);border:1px solid var(--ln);box-shadow:0 2px 14px #0000001f;max-width:920px;margin:0 auto 18px;padding:40px 46px 32px;font-family:"Sarabun","IBM Plex Sans Thai",system-ui,sans-serif;font-size:16px;line-height:1.7}
+.rpt-letter{text-align:center;border-bottom:3px double var(--ink);padding-bottom:14px;margin-bottom:6px}
+.rpt-org{font-size:14px;font-weight:600;color:var(--mut);letter-spacing:.03em}
+.rpt-title{font-size:23px;font-weight:700;line-height:1.4;margin:4px 0 0}
+.rpt-meta{display:flex;justify-content:space-between;gap:2px 16px;flex-wrap:wrap;font-size:14px;color:var(--mut);margin:10px 0 0}
+.rpt h2{font-size:17px;font-weight:700;margin:26px 0 10px;padding-bottom:3px;border-bottom:1px solid var(--ink);break-after:avoid}
+.rpt p{margin:6px 0}.rpt ol{margin:6px 0 0;padding-left:24px}.rpt li{margin:3px 0}
+.rpt table{font-size:14.5px}
+.rpt .kv th,.rpt .kv td{white-space:normal;border:1px solid var(--ln);padding:6px 12px;vertical-align:top;text-align:left}
+.rpt .kv th{width:34%;background:var(--bg);color:var(--ink);font-weight:600}
+.rpt .dt th{background:var(--bg);color:var(--ink);font-weight:600;text-align:center;border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);padding:7px 10px}
+.rpt .dt td{padding:6px 10px;border-bottom:1px solid var(--ln)}
+.rpt .dt tbody tr:last-child td{border-bottom:2px solid var(--ink)}
+.rpt .dt td.n{text-align:right;font-variant-numeric:tabular-nums}.rpt .dt td.c{text-align:center}
+.rpt .dt td.l{white-space:normal;min-width:140px}
+.rpt .wrap th{background:var(--bg)}
+.rpt-cap{font-weight:600;font-size:15px;margin:16px 0 6px}
+.rs{font-weight:700}.rs.ok{color:var(--ok)}.rs.bad{color:var(--bad)}.rs.na{color:var(--mut)}
+.verdict{border:2px solid var(--mut);padding:12px 16px;margin:6px 0 12px;display:flex;gap:6px 16px;align-items:center;flex-wrap:wrap}
+.verdict.ok{border-color:var(--ok)}.verdict.bad{border-color:var(--bad)}
+.verdict .vl{font-size:19px;font-weight:700;white-space:nowrap}.verdict.ok .vl{color:var(--ok)}.verdict.bad .vl{color:var(--bad)}
+.kf{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ln)}
+.kf>div{padding:10px 12px;border-right:1px solid var(--ln);text-align:center}.kf>div:last-child{border-right:0}
+.kf .v{font-size:24px;font-weight:700;line-height:1.25}.kf .t{font-size:13px;color:var(--mut)}
+.rpt .fig{margin:14px 0 4px}.rpt .fig svg{max-width:720px;display:block;margin:0 auto}
+.hi{background:var(--badbg);color:var(--bad);font-weight:700}.mid{background:var(--wbg);color:var(--warn);font-weight:700}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;font-size:15px;margin-top:34px}
+.sign-line{border-bottom:1px dotted var(--mut);height:40px;margin:0 auto 6px;width:75%}
+.rpt-foot{margin-top:22px;padding-top:8px;border-top:1px solid var(--ln);font-size:13px;color:var(--mut);text-align:center}
+@media(max-width:640px){.rpt{padding:22px 14px}.rpt-title{font-size:20px}.kf{grid-template-columns:1fr 1fr}.kf>div:nth-child(2){border-right:0}.kf>div:nth-child(-n+2){border-bottom:1px solid var(--ln)}.rpt .kv th{width:38%}.sign-grid{gap:16px}}
 @page{size:A4 portrait;margin:14mm 14mm 16mm 14mm}
 @media print{
 :root:root:root{--bg:#fff;--sf:#fff;--ink:#111827;--mut:#475569;--ln:#cbd5e1;--ac:#0f8b8d;--ok:#166534;--bad:#991b1b;--warn:#92400e;--okbg:#dcfce7;--badbg:#fee2e2;--wbg:#fef3c7}
@@ -108,11 +161,16 @@ main{max-width:100%!important;width:100%!important;padding:0!important;margin:0!
 .doc-box{border:1px solid #cbd5e1;border-radius:6px;padding:8px 12px;background:#fff!important}
 .doc-box-lbl{font-size:8.5pt;color:#475569}.doc-box-val{font-size:13pt;font-weight:700;color:#0f172a}
 .card{background:#fff!important;border:1px solid #cbd5e1!important;border-radius:6px!important;padding:12px 14px!important;margin-bottom:14px!important;box-shadow:none!important}
-.wrap{overflow:visible!important}
+.wrap{overflow:visible!important;max-height:none!important}
+.wrap th,.alist th{position:static!important;box-shadow:none!important}
 .wrap td:first-child,.wrap th:first-child{position:static!important;background:transparent!important;box-shadow:none!important}
 table{width:100%!important;border-collapse:collapse!important;font-size:8.5pt!important}
 tr{break-inside:avoid}
-th,td{white-space:normal!important;word-break:break-word!important;padding:5px 6px!important;border:1px solid #cbd5e1!important;color:#111827!important}
+th,td{white-space:nowrap!important;word-break:keep-all!important;padding:5px 6px!important;border:1px solid #cbd5e1!important;color:#111827!important}
+td.tx{white-space:normal!important;word-break:break-word!important}
+thead{display:table-header-group}
+.card,.doc-header,.doc-summary-boxes,.doc-footer,.fig,table,svg{break-inside:avoid;page-break-inside:avoid}
+.cap{font-size:10pt;margin-top:6px}
 th{background:#f1f5f9!important;color:#0f172a!important;font-weight:700!important}
 .mut{color:#475569!important;font-size:8pt!important}
 .pill{border:1px solid #cbd5e1;padding:1px 6px!important;font-size:7.5pt!important}
@@ -120,6 +178,15 @@ th{background:#f1f5f9!important;color:#0f172a!important;font-weight:700!importan
 .doc-note{font-size:8.5pt;color:#475569;border-top:1px solid #e2e8f0;padding-top:8px;margin-bottom:24px}
 .sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;font-size:9.5pt}
 .sign-line{border-bottom:1px dotted #475569;height:36px;margin:0 auto 6px;width:75%}
+.rpt{border:0!important;box-shadow:none!important;padding:0!important;max-width:100%!important;margin:0!important;font-size:10.5pt!important}
+.rpt h2{font-size:12pt!important}
+.rpt table{font-size:8.5pt!important}
+.rpt .dt th,.rpt .kv th{background:#f1f5f9!important;color:#0f172a!important}
+.rpt .kv th,.rpt .kv td,.rpt .dt td.l{white-space:normal!important}
+.verdict,.kf,.sign-grid,.rpt-foot,.rpt .fig{break-inside:avoid}
+.rs.ok{color:#166534!important}.rs.bad{color:#991b1b!important}
+.hi{background:#fee2e2!important;color:#991b1b!important}.mid{background:#fef3c7!important;color:#92400e!important}
+.kf{grid-template-columns:repeat(4,1fr)!important}.kf>div{border-bottom:0!important}
 }
 </style>
 </head>
@@ -134,7 +201,7 @@ th{background:#f1f5f9!important;color:#0f172a!important;font-weight:700!importan
 <a href="#standard" data-r="standard">4. เลือกมาตรฐาน</a>
 <div class="grp">แดชบอร์ด</div>
 <a href="#overview" data-r="overview">5. ภาพรวม</a>
-<a href="#compliance" data-r="compliance">6. ผลเทียบมาตรฐาน</a>
+<a href="#compliance" data-r="compliance">6. สรุป</a>
 <div style="flex:1"></div>
 <button class="ghost" id="theme" style="color:var(--sideink);border-color:#ffffff33">สลับโหมดมืด/สว่าง</button>
 </aside>
@@ -164,12 +231,41 @@ Temp:[["°C",v=>v,/°c|celsius|\(c\)/i],["°F",v=>(v-32)*5/9,/°f|fahrenheit|\(f
 // ช่วงค่าที่เป็นไปได้ทางกายภาพ (ค่านอกช่วงถือว่าผิดพลาด)
 const RNG={pH:[0,14],DO:[0,20],EC:[0,200000],Sal:[0,100],Temp:[-2,70],Turb:[0,5000],BOD:[0,20000],COD:[0,100000],TSS:[0,50000],TDS:[0,200000],Oil:[0,10000],TKN:[0,5000]};
 // ค่าเกณฑ์ [ต่ำสุด, สูงสุด] เป็นตัวอย่างสาธิต ตรวจกับประกาศล่าสุดก่อนใช้จริง
+const bt=(n,d,L,note)=>({n:"น้ำทิ้งจากอาคาร "+n+" (ไทย)",d,L,note});
 const S={
-ind:{n:"น้ำทิ้งโรงงานอุตสาหกรรม (ไทย)",d:"เกณฑ์ระบายน้ำทิ้งจากโรงงาน",note:"อ้างอิงประกาศกระทรวงอุตสาหกรรม พ.ศ. 2560 (ค่ามาตรฐานทั่วไป ไม่รวมกรณีผ่อนผัน)",L:{pH:[5.5,9],Temp:[null,40],BOD:[null,20],COD:[null,120],TSS:[null,50],TDS:[null,3000],Oil:[null,5],TKN:[null,100]}},
-bld:{n:"น้ำทิ้งจากอาคาร (ไทย)",d:"อาคารที่ต้องบำบัดน้ำเสียก่อนระบาย (ใช้เกณฑ์อาคารประเภท ก ซึ่งเข้มที่สุด)",note:"TDS 500 mg/L คือค่าที่เพิ่มขึ้นจากน้ำใช้ตั้งต้น อาคารประเภทอื่น (ข–จ) มีเกณฑ์ BOD, TSS, TKN ที่ผ่อนกว่านี้",L:{pH:[5,9],BOD:[null,20],TSS:[null,30],TDS:[null,500],Oil:[null,20],TKN:[null,35]}},
-srf:{n:"แหล่งน้ำผิวดิน ประเภท 3",d:"ใช้ประเมินคุณภาพน้ำในแม่น้ำและคลอง",note:"อุณหภูมิ: เกณฑ์กำหนดว่าต้องไม่เปลี่ยนจากธรรมชาติเกิน 3 °C จึงไม่ใช้ค่าตายตัว",L:{pH:[5,9],DO:[4,null],BOD:[null,2]}},
+ind:{n:"น้ำทิ้งโรงงานอุตสาหกรรม (ไทย)",d:"เกณฑ์ระบายน้ำทิ้งจากโรงงาน นิคม และเขตประกอบการอุตสาหกรรม",note:"TDS: ถ้าแหล่งน้ำที่รับมี TDS เกิน 3,000 mg/L น้ำทิ้งเกินกว่าค่าในแหล่งน้ำได้ไม่เกิน 5,000 mg/L ระบบใช้ 3,000 เป็นค่าเทียบ",L:{pH:[5.5,9],Temp:[null,40],BOD:[null,20],COD:[null,120],TSS:[null,50],TDS:[null,3000],Oil:[null,5],TKN:[null,100]}},
+bldA:bt("ประเภท ก","",{pH:[5.5,9],BOD:[null,20],TSS:[null,30],TDS:[null,1000],Oil:[null,20],TKN:[null,35]},"TDS 1,000 mg/L ใช้กับอาคารอยู่อาศัยและพาณิชย์ ส่วนสถานพยาบาลใช้ค่าที่เพิ่มจากน้ำใช้ปกติไม่เกิน 1,000 mg/L (ระบบไม่คำนวณ) และมีเกณฑ์โคลิฟอร์ม คลอรีนอิสระ ซัลไฟด์ ซึ่งไม่อยู่ในพารามิเตอร์ของระบบ"),
+bldB:bt("ประเภท ข","",{pH:[5.5,9],BOD:[null,30],TSS:[null,40],TDS:[null,1000],Oil:[null,20],TKN:[null,35]},"TDS 1,000 mg/L ใช้กับอาคารอยู่อาศัยและพาณิชย์ ส่วนสถานพยาบาลใช้ค่าที่เพิ่มจากน้ำใช้ปกติไม่เกิน 1,000 mg/L (ระบบไม่คำนวณ) และมีเกณฑ์โคลิฟอร์ม คลอรีนอิสระ ซัลไฟด์ ซึ่งไม่อยู่ในพารามิเตอร์ของระบบ"),
+bldC:bt("ประเภท ค","",{pH:[5.5,9],BOD:[null,40],TSS:[null,50],TDS:[null,1300],Oil:[null,20],TKN:[null,40]},"มีเกณฑ์ซัลไฟด์ ≤ 1.0 mg/L ซึ่งไม่อยู่ในพารามิเตอร์ของระบบ"),
+bldD1:bt("ประเภท ง (อาคารอยู่อาศัย)","",{pH:[5.5,9],BOD:[null,50],TSS:[null,60],Oil:[null,20]},"ประเภท ง ไม่กำหนด TDS และ TKN"),
+bldD2:bt("ประเภท ง (พาณิชย์/สถานพยาบาล)","",{pH:[5.5,9],BOD:[null,100],TSS:[null,60],Oil:[null,50]},"ประเภท ง ไม่กำหนด TDS และ TKN"),
+srf:{n:"แหล่งน้ำผิวดิน ประเภท 3",d:"ใช้ประเมินคุณภาพน้ำในแม่น้ำและคลอง",note:"อุณหภูมิ: ต้องไม่สูงกว่าธรรมชาติเกิน 3 °C จึงไม่ใช้ค่าตายตัว",L:{pH:[5,9],DO:[4,null],BOD:[null,2]}},
 cus:{n:"กำหนดเกณฑ์เอง",d:"ใส่ค่าต่ำสุดและสูงสุดเอง เช่น EC หรือความเค็ม",note:"",L:{}}};
-const st={ss:{},unit:{},tbl:null,map:{},rows:null,rep:null,std:"srf",pm:"DO",f:{site:"",from:"",to:""},sites:[],avail:[],dedupe:true};
+const SRC={
+ind:{t:"ประกาศกระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม เรื่อง กำหนดมาตรฐานควบคุมการระบายน้ำทิ้งจากโรงงานอุตสาหกรรม นิคมอุตสาหกรรม และเขตประกอบการอุตสาหกรรม",m:"ลงวันที่ 29 มีนาคม พ.ศ. 2559 · ราชกิจจานุเบกษา เล่ม 133 ตอนพิเศษ 129 ง วันที่ 6 มิถุนายน 2559 · ใช้บังคับเมื่อพ้น 1 ปีนับจากวันประกาศ",u:"ข้อ 4.1–4.15 (pH, อุณหภูมิ, TDS, TSS, BOD, COD, น้ำมันและไขมัน, TKN)",x:"ประกาศยังมีเกณฑ์สี ซัลไฟด์ ไซยาไนด์ ฟีนอล คลอรีนอิสระ และโลหะหนัก ซึ่งไม่อยู่ในพารามิเตอร์ของระบบ · ข้อ 8 ไม่ใช้กับแหล่งกำเนิดที่มีมาตรฐานเฉพาะตามกฎหมายอยู่แล้ว"},
+bld:{t:"ประกาศกระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม เรื่อง กำหนดมาตรฐานควบคุมการระบายน้ำทิ้งจากอาคารบางประเภทและบางขนาด พ.ศ. 2567",m:"ประกาศ ณ วันที่ 28 มิถุนายน พ.ศ. 2567 · ราชกิจจานุเบกษา เล่ม 141 ตอนพิเศษ 233 ง วันที่ 27 สิงหาคม 2567 · ยกเลิกประกาศฉบับลงวันที่ 7 พฤศจิกายน พ.ศ. 2548 · ใช้บังคับตั้งแต่วันถัดจากวันประกาศในราชกิจจานุเบกษา",u:"ข้อ 3–5 (ชนิดอาคาร ขนาดอาคาร และค่ามาตรฐานของอาคารประเภท ก–ง)",x:"ประเภท ง มีเกณฑ์ BOD และน้ำมันและไขมันแยกระหว่างอาคารอยู่อาศัยกับอาคารพาณิชย์/สถานพยาบาล · ข้อ 7 วิธีคิดขนาดอาคารเป็นไปตามที่คณะกรรมการควบคุมมลพิษประกาศ"},
+srf:{t:"ประกาศคณะกรรมการสิ่งแวดล้อมแห่งชาติ ฉบับที่ 8 (พ.ศ. 2537) เรื่อง กำหนดมาตรฐานคุณภาพน้ำในแหล่งน้ำผิวดิน (ออกตามพระราชบัญญัติส่งเสริมและรักษาคุณภาพสิ่งแวดล้อมแห่งชาติ พ.ศ. 2535)",m:"ประกาศ ณ วันที่ 2 มกราคม พ.ศ. 2537 · ราชกิจจานุเบกษา เล่ม 111 ตอนที่ 16 ง วันที่ 24 กุมภาพันธ์ 2537",u:"ข้อ 4(3) pH 5.0–9.0 · ข้อ 5 แหล่งน้ำประเภทที่ 3: DO ไม่น้อยกว่า 4.0 mg/L, BOD ไม่เกิน 2.0 mg/L",x:"ข้อ 4(2) อุณหภูมิไม่สูงกว่าธรรมชาติเกิน 3 °C · ประกาศยังมีเกณฑ์แบคทีเรีย แอมโมเนีย ไนเตรต และโลหะหนัก ซึ่งไม่อยู่ในพารามิเตอร์ของระบบ · แหล่งน้ำแต่ละแห่งจัดเป็นประเภทใดให้เป็นไปตามที่กรมควบคุมมลพิษประกาศ"}};
+const srcOf=k=>SRC[k.startsWith("bld")?"bld":k]||null;
+const BT=[["h","1. อาคารอยู่อาศัย"],["อาคารชุด","ห้องชุด","≥ 500","100 – <500","< 100","–"],["หอพัก","ห้อง","–","≥ 250","50 – <250","< 50"],["หอพัก ห้องเช่า ห้องแบ่งเช่า หรือกิจการอื่นในทำนองเดียวกัน (กฎหมายว่าด้วยการสาธารณสุข)","ห้อง","–","≥ 250","50 – <250","< 50"],["สถานรับเลี้ยงเด็ก","–","–","–","–","ทุกขนาด"],["สถานดูแลผู้สูงอายุหรือผู้มีภาวะพึ่งพิง","–","–","–","–","ทุกขนาด"],["ที่พักอาศัยสำหรับลูกจ้างประเภทกิจกรรมก่อสร้าง","–","–","–","–","ทุกขนาด"],
+["h","2. อาคารพาณิชย์"],["โรงแรม","ห้อง","≥ 200","60 – <200","< 60","–"],["สถานบริการ (สถานอาบน้ำ นวด หรืออบตัว)","ตร.ม.","–","≥ 5,000","1,000 – <5,000","< 1,000"],["โรงเรียนเอกชน โรงเรียนของทางราชการ สถาบันอุดมศึกษา","ตร.ม.","≥ 25,000","5,000 – <25,000","–","< 5,000"],["อาคารที่ทำการของทางราชการ รัฐวิสาหกิจ องค์การระหว่างประเทศและของเอกชน","ตร.ม.","≥ 55,000","10,000 – <55,000","5,000 – <10,000","< 5,000"],["ศูนย์การค้าหรือห้างสรรพสินค้า","ตร.ม.","≥ 25,000","5,000 – <25,000","–","< 5,000"],["ตลาด","ตร.ม.","≥ 2,500","1,500 – <2,500","1,000 – <1,500","< 1,000"],["ภัตตาคารหรือร้านอาหาร","ตร.ม.","≥ 2,500","500 – <2,500","250 – <500","< 250"],
+["h","3. อาคารสถานพยาบาล"],["สถานพยาบาลที่รับผู้ป่วยไว้ค้างคืน","เตียง","≥ 30","10 – <30","–","< 10"]];
+const bldTable=()=>`<div class="wrap"><table><thead><tr><th>ชนิดอาคาร</th><th>หน่วย</th><th>ประเภท ก</th><th>ประเภท ข</th><th>ประเภท ค</th><th>ประเภท ง</th></tr></thead><tbody>${BT.map(r=>r[0]=="h"?`<tr><td colspan="6"><b>${r[1]}</b></td></tr>`:`<tr>${r.map((c,i)=>`<td${i?"":' class="tx" style="min-width:220px"'}>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+function srcText(k){
+ const b=k.startsWith("bld"),s=srcOf(k),ids=b?["bldA","bldB","bldC","bldD1","bldD2"]:[k],L=["แหล่งอ้างอิงค่าเกณฑ์ · "+(b?"น้ำทิ้งจากอาคาร (ไทย)":S[k].n),""];
+ if(s)L.push(s.t,s.m,"ข้อที่ใช้: "+s.u,s.x,"");else L.push("ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีแหล่งอ้างอิงในระบบ","");
+ ids.forEach(id=>{L.push("["+S[id].n+"]");K.forEach(p=>L.push("  "+p+" "+P[p].n+": "+limTxtS(id,p)));if(S[id].note)L.push("  หมายเหตุ: "+S[id].note);L.push("")});
+ if(b){L.push("ตารางจัดประเภทอาคารตามขนาด (ข้อ 4)","ชนิดอาคาร | หน่วย | ประเภท ก | ประเภท ข | ประเภท ค | ประเภท ง");BT.forEach(r=>L.push(r[0]=="h"?r[1]:r.join(" | ")));L.push("")}
+ L.push("ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อคัดกรองเบื้องต้น ควรตรวจกับต้นฉบับในราชกิจจานุเบกษาและประกาศฉบับล่าสุด");
+ return L.join("\r\n");
+}
+function showSrc(k){save("AquaCheck-reference-"+(k.startsWith("bld")?"bld":k)+".txt",srcText(k))}
+function showSrcModal(k){
+ const s=srcOf(k),b=k.startsWith("bld"),old=$("#md");if(old)old.remove();
+ const m=document.createElement("div");m.id="md";m.className="no-print";
+ m.innerHTML=`<div class="card" role="dialog" aria-modal="true"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><b style="font-size:17px">แหล่งอ้างอิง · ${b?"น้ำทิ้งจากอาคาร (ไทย)":S[k].n}</b><button class="ghost" id="mdx">ปิด</button></div>`+(s?`<p><b>${s.t}</b></p><p class="mut">${s.m}</p><p><b>ข้อที่ใช้:</b> ${s.u}</p><p class="mut">${s.x}</p>${b?`<p style="margin-bottom:4px"><b>ตารางจัดประเภทอาคารตามขนาด (ข้อ 4)</b></p>${bldTable()}`:""}`:'<p class="mut">ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีแหล่งอ้างอิงในระบบ</p>')+'<p class="mut">ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อคัดกรองเบื้องต้น ควรตรวจกับต้นฉบับในราชกิจจานุเบกษาและประกาศฉบับล่าสุด</p></div>';
+ document.body.appendChild(m);const c=()=>m.remove();$("#mdx").onclick=c;m.onclick=e=>{if(e.target===m)c()};
+}
+const st={ss:{},unit:{},tbl:null,map:{},rows:null,rep:null,std:"srf",pm:"DO",f:{site:"",from:"",to:""},sites:[],avail:[],dedupe:true,lod:"half",smooth:true};
 const app=document.getElementById("app"),$=q=>document.querySelector(q);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=(x,d=1)=>x==null||isNaN(x)?"–":(+x).toLocaleString("en",{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -197,16 +293,16 @@ function parseTable(t){
  return {head:rows[0].map(s=>s.trim()),rows:rows.slice(1),dl};
 }
 const MON=[["มค","มกราคม","jan"],["กพ","กุมภาพันธ์","feb"],["มีค","มีนาคม","mar"],["เมย","เมษายน","apr"],["พค","พฤษภาคม","may"],["มิย","มิถุนายน","jun"],["กค","กรกฎาคม","jul"],["สค","สิงหาคม","aug"],["กย","กันยายน","sep"],["ตค","ตุลาคม","oct"],["พย","พฤศจิกายน","nov"],["ธค","ธันวาคม","dec"]];
-function pd(s){
+function pd(s,mdy){
  s=String(s||"").trim();if(!s)return null;let m,y,mo,d,h=0,mi=0;
  if(/^\d{5}(\.\d+)?$/.test(s)){const dt=new Date(Math.round((+s-25569)*864e5));y=dt.getUTCFullYear();mo=dt.getUTCMonth()+1;d=dt.getUTCDate();h=dt.getUTCHours();mi=dt.getUTCMinutes()}
  else if(m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})(?:[ T]+(\d{1,2}):(\d{2}))?/)){y=+m[1];mo=+m[2];d=+m[3];h=+(m[4]||0);mi=+(m[5]||0)}
- else if(m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})(?:[ T,]+(\d{1,2})[:.](\d{2}))?/)){d=+m[1];mo=+m[2];y=+m[3];h=+(m[4]||0);mi=+(m[5]||0)}
+ else if(m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})(?:[ T,]+(\d{1,2})[:.](\d{2}))?/)){d=mdy?+m[2]:+m[1];mo=mdy?+m[1]:+m[2];y=+m[3];h=+(m[4]||0);mi=+(m[5]||0)}
  else if(m=s.match(/^(\d{1,2})\s*([A-Za-zก-๙][A-Za-zก-๙.\s]*?)\s*(\d{4})(?:[ T,]+(\d{1,2})[:.](\d{2}))?/)){const k=m[2].replace(/[.\s]/g,"").toLowerCase(),i=MON.findIndex(a=>a.some(x=>k==x||(/^[a-z]{3,}$/.test(k)&&x==k.slice(0,3))));if(i<0)return null;d=+m[1];mo=i+1;y=+m[3];h=+(m[4]||0);mi=+(m[5]||0)}
  else return null;
- if(y>2400)y-=543;
+ const be=y>2400;if(be)y-=543;
  if(mo<1||mo>12||d<1||d>31)return null;
- return {d:y+"-"+pad(mo)+"-"+pad(d),t:pad(h)+":"+pad(mi),ts:Date.UTC(y,mo-1,d,h,mi)};
+ return {d:y+"-"+pad(mo)+"-"+pad(d),t:pad(h)+":"+pad(mi),ts:Date.UTC(y,mo-1,d,h,mi),be};
 }
 function auto(head){
  const M={},used={};
@@ -218,28 +314,80 @@ function auto(head){
  const U={};K.forEach(k=>{if(UN[k]&&M[k]>=0){const i=UN[k].findIndex(u=>u[2].test(head[M[k]]));U[k]=i<0?0:i}});st.unit=U;
  return M;
 }
+const FL={pH:.3,DO:.5,BOD:1.5,COD:6};
+const LGL={badDate:"ลบแถว: อ่านวันที่ไม่ได้",empty:"ลบแถว: ไม่มีค่าพารามิเตอร์ที่ใช้ได้",dup:"ลบแถว: ซ้ำกันทุกช่อง",conf:"ลบแถว: จุดและเวลาเดียวกันแต่ค่าต่างกัน (เก็บแถวแรก)",neg:"ล้างค่า: ติดลบ",rng:"ล้างค่า: เป็นไปไม่ได้ทางกายภาพ",txt:"ล้างค่า: ไม่ใช่ตัวเลข",lod:"แทนค่า: ต่ำกว่าขีดจำกัดการตรวจวัด",spk:"ปรับค่า: พุ่งผิดปกติให้ราบเรียบ"};
+const LGO=["badDate","empty","dup","conf","neg","rng","txt","lod","spk"];
+const num=x=>{x=String(x).trim().replace(/\s/g,"");if(/^-?\d+,\d{1,2}$/.test(x))x=x.replace(",",".");else x=x.replace(/,/g,"");return parseFloat(x)};
+function numTxt(x){
+ x=String(x==null?"":x).trim();
+ if(!x||/^(-|–|—|n\/?a|nan|null|none|\?)$/i.test(x))return {blank:1};
+ const m=x.match(/^(?:<|＜|น้อยกว่า|ต่ำกว่า)\s*=?\s*(\d[\d,]*\.?\d*|\.\d+)/i);
+ if(m)return {lod:1,lim:num(m[1])};
+ if(/^(nd|n\.d\.?|bdl|lod|ไม่พบ|ตรวจไม่พบ|<\s*lod|<\s*mdl)/i.test(x))return {lod:1,lim:null};
+ const v=num(x);return isNaN(v)?{bad:1}:{v};
+}
+const med=a=>{const z=[...a].sort((p,q)=>p-q),n=z.length;return n%2?z[n>>1]:(z[n/2-1]+z[n/2])/2};
 function runClean(){
  st.ss={};
- const T=st.tbl,M=st.map,r={total:T.rows.length,dup:0,badDate:0,empty:0,neg:0,rng:{},stuck:[],hints:[]},seen={},out=[];
- T.rows.forEach(c=>{
+ const T=st.tbl,M=st.map,cn={},ex={},log=[],r={total:T.rows.length,dup:0,badDate:0,empty:0,neg:0,rng:{},stuck:[],hints:[],notes:[],cons:[],cn,ex,log};
+ const add=(c,row,site,d,k,from,to,note)=>{cn[c]=(cn[c]||0)+1;const e={c,row,site,d,k,from,to,note},a=ex[c]||(ex[c]=[]);if(a.length<8)a.push(e);log.push(e)};
+ const dt=o=>dmy(o.d)+(o.t!="00:00"?" "+o.t:"");
+ let mdy=false;
+ if(M.date>=0){let a=0,b=0;T.rows.forEach(c=>{const m=String(c[M.date]||"").trim().match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.]\d{4}/);if(m){a=Math.max(a,+m[1]);b=Math.max(b,+m[2])}});
+  if(b>12&&a<=12){mdy=true;r.notes.push("ตรวจพบวันที่รูปแบบ เดือน/วัน/ปี จึงอ่านตามรูปแบบนั้น")}
+  else if(a>0&&a<=12&&b<=12)r.hints.push("รูปแบบวันที่ในไฟล์กำกวม (ทั้งวันและเดือนไม่เกิน 12) ระบบอ่านเป็น วัน/เดือน/ปี ให้ตรวจช่วงวันที่ในผลลัพธ์ว่าถูกต้อง")}
+ const seen={};let out=[],be=0;
+ T.rows.forEach((c,i)=>{
+  const rn=i+2;
   let ds=M.date>=0?c[M.date]:"";if(M.time>=0&&c[M.time]&&String(ds).indexOf(":")<0)ds+=" "+c[M.time];
-  const p=pd(ds);if(!p){r.badDate++;return}
-  const o={site:((M.site>=0&&c[M.site])||"").trim()||"ไม่ระบุ",d:p.d,t:p.t,ts:p.ts};let has=false;
-  K.forEach(k=>{let v=M[k]>=0?parseFloat(String(c[M[k]]).replace(/,/g,"")):NaN;
-   if(isNaN(v)){o[k]=null;return}
+  const site0=((M.site>=0&&c[M.site])||"").trim()||"ไม่ระบุ";
+  const p=pd(ds,mdy);
+  if(!p){add("badDate",rn,site0,String(ds||"").trim()||"(ว่าง)","","","ลบแถว","อ่านวันที่ไม่ได้");return}
+  if(p.be)be++;
+  const o={site:site0,d:p.d,t:p.t,ts:p.ts,r:rn},when=dt(p);let has=false;
+  K.forEach(k=>{
+   if(M[k]<0){o[k]=null;return}
+   const raw=String(c[M[k]]==null?"":c[M[k]]).trim(),q=numTxt(raw);let v;
+   if(q.blank){o[k]=null;return}
+   if(q.bad){o[k]=null;add("txt",rn,o.site,when,k,raw,"(เว้นว่าง)","ไม่ใช่ตัวเลข");return}
+   if(q.lod){
+    if(st.lod=="skip"||(q.lim==null&&st.lod=="half")){o[k]=null;add("lod",rn,o.site,when,k,raw,"(เว้นว่าง)",st.lod=="skip"?"ตั้งค่าให้เว้นว่าง":"ไม่ทราบขีดจำกัด จึงเว้นว่าง");return}
+    v=st.lod=="zero"||q.lim==null?0:q.lim/2;
+   }else v=q.v;
    if(UN[k])v=Math.round(UN[k][st.unit[k]||0][1](v)*1e4)/1e4;
-   if(v<0&&k!="Temp"){o[k]=null;r.neg++;return}
-   const g=RNG[k];if(g&&(v<g[0]||v>g[1])){const q=r.rng[k]||(r.rng[k]={n:0,ex:[]});q.n++;if(q.ex.length<3)q.ex.push(v);o[k]=null;return}
+   if(q.lod)add("lod",rn,o.site,when,k,raw,v,st.lod=="zero"?"แทนด้วย 0":"แทนด้วยครึ่งหนึ่งของขีดจำกัด");
+   if(v<0&&k!="Temp"){o[k]=null;add("neg",rn,o.site,when,k,raw,"(เว้นว่าง)","ค่าติดลบ");return}
+   const g=RNG[k];if(g&&(v<g[0]||v>g[1])){const z=r.rng[k]||(r.rng[k]={n:0,ex:[]});z.n++;if(z.ex.length<3)z.ex.push(v);o[k]=null;add("rng",rn,o.site,when,k,raw,"(เว้นว่าง)","นอกช่วง "+g[0]+" – "+g[1]);return}
    o[k]=v;has=true});
-  if(!has){r.empty++;return}
-  if(st.dedupe){const key=o.site+"|"+o.ts+"|"+K.map(k=>o[k]).join("|");if(seen[key]){r.dup++;return}seen[key]=1}
+  if(!has){add("empty",rn,o.site,when,"","","ลบแถว","ไม่มีค่าพารามิเตอร์ที่ใช้ได้");return}
+  if(st.dedupe){const key=o.site+"|"+o.ts+"|"+K.map(k=>o[k]).join("|");if(seen[key]){add("dup",rn,o.site,when,"","","ลบแถว","ซ้ำกับแถว "+seen[key]);return}seen[key]=rn}
   out.push(o)});
- out.sort((a,b)=>a.ts-b.ts);r.kept=out.length;
+ out.sort((a,b)=>a.ts-b.ts);
+ if(be)r.notes.push("แปลงปี พ.ศ. เป็น ค.ศ. อัตโนมัติ "+be.toLocaleString()+" แถว");
+ const vs=o=>K.filter(k=>o[k]!=null).map(k=>k+"="+o[k]).join(" ");
+ if(out.some(o=>o.t!="00:00")){const m=new Map(),o2=[];
+  out.forEach(o=>{const key=o.site+"|"+o.ts,f=m.get(key);
+   if(f&&K.some(k=>f[k]!==o[k])){add("conf",o.r,o.site,dt(o),"",vs(o),"ลบแถว","เก็บแถว "+f.r+" ไว้ ("+vs(f)+")");return}
+   if(!f)m.set(key,o);o2.push(o)});out=o2}
+ r.kept=out.length;
  const by={};out.forEach(o=>(by[o.site]||(by[o.site]=[])).push(o));
  Object.keys(by).forEach(si=>K.forEach(k=>{let run=0,prev=null,a=null,z=null;
   const fl=()=>{if(run>=STUCK)r.stuck.push({k,site:si,n:run,from:a.d,to:z.d,v:prev})};
   by[si].forEach(o=>{const v=o[k];if(v==null)return;if(v===prev){run++;z=o}else{fl();prev=v;run=1;a=o;z=o}});fl()}));
  r.stuck.sort((a,b)=>b.n-a.n);
+ const sat=t=>14.652-.41022*t+.007991*t*t-.000077774*t*t*t;
+ const chk=(label,test,show)=>{let n=0,tot=0;const e=[];out.forEach(o=>{const t=test(o);if(t==null)return;tot++;if(t){n++;if(e.length<5)e.push(o.site+" "+dt(o)+": "+show(o))}});if(n)r.cons.push({label,n,tot,ex:e})};
+ chk("BOD สูงกว่า COD (ไม่น่าเป็นไปได้ เพราะ COD รวมสารที่ย่อยสลายทางชีวภาพไว้แล้ว)",o=>o.BOD==null||o.COD==null?null:o.BOD>o.COD,o=>"BOD "+fmt(o.BOD,1)+" > COD "+fmt(o.COD,1));
+ chk("TDS/EC นอกช่วง 0.3–1.0 (ปกติราว 0.5–0.8) ให้ตรวจหน่วยหรือเซนเซอร์",o=>o.TDS==null||!o.EC?null:(o.TDS/o.EC<.3||o.TDS/o.EC>1),o=>"TDS "+fmt(o.TDS,0)+" / EC "+fmt(o.EC,0)+" = "+fmt(o.TDS/o.EC,2));
+ chk("DO สูงเกิน 120% ของค่าอิ่มตัว (หรือเกิน 15 mg/L เมื่อไม่มีอุณหภูมิ)",o=>o.DO==null?null:(o.Temp!=null?o.DO>sat(o.Temp)*1.2:o.DO>15),o=>"DO "+fmt(o.DO,1)+(o.Temp!=null?" ที่ "+fmt(o.Temp,1)+" °C":""));
+ if(st.smooth){
+  Object.keys(by).forEach(si=>["pH","DO","BOD","COD"].forEach(k=>{
+   const a=by[si].filter(o=>o[k]!=null);if(a.length<5)return;
+   const ch=[];
+   a.forEach((o,i)=>{const w=a.slice(Math.max(0,i-3),i+4).map(x=>x[k]),md=med(w),sc=Math.max(1.4826*med(w.map(x=>Math.abs(x-md))),FL[k]);
+    if(Math.abs(o[k]-md)>3.5*sc)ch.push([o,Math.round(md*100)/100])});
+   ch.forEach(([o,nv])=>{add("spk",o.r,o.site,dt(o),k,o[k],nv,"แทนด้วยค่ากลางของค่าข้างเคียง (ไม่เกิน 7 ค่าของจุดเดียวกัน)");o[k]=nv})}))}
+ r.dup=cn.dup||0;r.badDate=cn.badDate||0;r.empty=cn.empty||0;r.neg=cn.neg||0;
  const ec=out.map(o=>o.EC).filter(v=>v!=null).sort((a,b)=>a-b);
  if(ec.length&&ec[ec.length>>1]<10&&(st.unit.EC||0)==0)r.hints.push("ค่า EC ส่วนใหญ่ต่ำมาก (มัธยฐาน "+fmt(ec[ec.length>>1],2)+") ถ้าไฟล์ใช้หน่วย mS/cm ให้กลับไปเลือกหน่วยที่หน้าจับคู่คอลัมน์");
  st.rows=out;st.rep=r;st.sites=[...new Set(out.map(o=>o.site))];
@@ -282,7 +430,7 @@ function msr(k,rows,day){
 }
 const legend=sr=>sr.length>1?'<div class="leg">'+sr.map(x=>`<span><i style="background:${sc(x.site)}"></i>${esc(x.site)}</span>`).join("")+'</div>':"";
 const cb=(k,rows,w,h,mini)=>{const sr=msr(k,rows,mini);return chart(sr,k,w,h,mini)+legend(sr)};
-function chart(sr,k,w,h,mini){
+function chart(sr,k,w,h,mini,zm){
  if(!sr.length)return '<div class="mut" style="padding:28px 0">ไม่มีข้อมูลของพารามิเตอร์นี้ในช่วงที่เลือก</div>';
  const g=mini?{l:50,r:8,t:8,b:40}:{l:64,r:14,t:12,b:44},ny=mini?3:4,nx=mini||w<520?2:3;
  let lo=Infinity,hi=-Infinity,x0=Infinity,x1=-Infinity;
@@ -290,17 +438,21 @@ function chart(sr,k,w,h,mini){
  const ls=sr.map(z=>({z,l:lim(k,z.site)})),uni=new Set(ls.map(x=>JSON.stringify(x.l))).size==1;
  ls.forEach(x=>{if(x.l){if(x.l[0]!=null)lo=Math.min(lo,x.l[0]);if(x.l[1]!=null)hi=Math.max(hi,x.l[1])}});
  const sp=(hi-lo)||1;lo-=sp*.08;hi+=sp*.08;
+ if(zm){const f0=x0,fs=(x1-x0)||1;x0=f0+zm.a*fs;x1=f0+zm.b*fs}
  const sx=(x1-x0)||1,X=x=>g.l+(x-x0)/sx*(w-g.l-g.r),Y=v=>h-g.b-(v-lo)/(hi-lo)*(h-g.t-g.b);
  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="กราฟ ${k}">`;
+ if(zm)s+=`<defs><clipPath id="czc"><rect x="${g.l}" y="${g.t}" width="${w-g.l-g.r}" height="${h-g.t-g.b}"/></clipPath></defs>`;
  for(let i=0;i<=ny;i++){const v=lo+(hi-lo)*i/ny,y=Y(v);s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${y}" y2="${y}" stroke="var(--ln)"/><text x="${g.l-6}" y="${y+4}" text-anchor="end">${fmt(v,hi-lo<10?2:0)}</text>`}
  for(let i=0;i<=nx;i++){const x=x0+sx*i/nx;s+=`<text x="${X(x)}" y="${h-g.b+16}" text-anchor="${i==0?"start":i==nx?"end":"middle"}">${fx(x,sx)}</text>`}
  s+=`<line x1="${g.l}" x2="${g.l}" y1="${g.t}" y2="${h-g.b}" stroke="var(--mut)"/><line x1="${g.l}" x2="${w-g.r}" y1="${h-g.b}" y2="${h-g.b}" stroke="var(--mut)"/>`;
  s+=`<text x="${(g.l+w-g.r)/2}" y="${h-5}" text-anchor="middle" style="font-weight:600">วันที่</text><text transform="rotate(-90)" x="${-(g.t+h-g.b)/2}" y="13" text-anchor="middle" style="font-weight:600">${k}${P[k].u?" ("+P[k].u+")":""}</text>`;
+ if(zm)s+='<g clip-path="url(#czc)">';
  (uni?ls.slice(0,1):ls).forEach(x=>{if(x.l)x.l.forEach(v=>{if(v!=null)s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${uni?"var(--bad)":sc(x.z.site)}" stroke-dasharray="${uni?"6 4":"2 4"}" stroke-width="${uni?1.4:1.2}"/>`})});
  sr.forEach(z=>{const c=sc(z.site);
   s+=`<polyline fill="none" stroke="${c}" stroke-width="${mini?1.5:1.8}" stroke-linejoin="round" points="${z.pts.map(p=>X(p.x).toFixed(1)+","+Y(p.v).toFixed(1)).join(" ")}"/>`;
   if(z.pts.length==1)s+=`<circle cx="${X(z.pts[0].x).toFixed(1)}" cy="${Y(z.pts[0].v).toFixed(1)}" r="3" fill="${c}"/>`;
   if(!mini)z.pts.forEach(p=>{if(p.ex)s+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="3.4" fill="var(--bad)"><title>${esc(z.site)} ${fx(p.x,0)}: ${fmt(p.v,2)}</title></circle>`})});
+ if(zm)s+="</g>";
  return s+"</svg>";
 }
 const pill=(k,s)=>!anyLim(k)?'<span class="pill">ไม่มีเกณฑ์</span>':s.ex==0?'<span class="pill ok">ผ่านทุกค่า</span>':`<span class="pill ${s.pct<5?"warn":"bad"}">เกินเกณฑ์ ${fmt(s.pct,1)}%</span>`;
@@ -314,7 +466,7 @@ function bar(){
 }
 function bindBar(r){
  const b=(id,fn)=>{const e=$(id);if(e)e.onchange=()=>{fn(e.value);if(st.f.from>st.f.to){const t=st.f.from;st.f.from=st.f.to;st.f.to=t}V[r]()}};
- document.querySelectorAll("[data-p]").forEach(x=>x.onclick=()=>{const n=+x.dataset.p,f=addD(st.hi,-(n-1));st.f.to=st.hi;st.f.from=n?(f<st.lo?st.lo:f):st.lo;V[r]()});b("#fs",v=>st.f.site=v);b("#ff",v=>{if(v)st.f.from=v});b("#ft",v=>{if(v)st.f.to=v});b("#fd",v=>st.std=v);
+ document.querySelectorAll("[data-p]").forEach(x=>x.onclick=()=>{const n=+x.dataset.p,f=addD(st.hi,-(n-1));st.f.to=st.hi;st.f.from=n?(f<st.lo?st.lo:f):st.lo;V[r]()});b("#fs",v=>st.f.site=v);b("#ff",v=>{if(v)st.f.from=v});b("#ft",v=>{if(v)st.f.to=v});b("#fd",v=>{st.std=v;if(v.startsWith("bld"))st.bt=v});
 }
 const V={};
 V.upload=()=>{
@@ -343,11 +495,11 @@ V.map=()=>{
  const fields=[["date","วันที่ (คอลัมน์วันที่-เวลารวมกันได้)"]].concat(M.time>=0?[["time","เวลา (คอลัมน์แยก)"]]:[],[["site","ชื่อข้อมูล / สถานี"]]).concat(K.map(k=>[k,`${P[k].n} (${k}${P[k].u?", "+P[k].u:""})`]));
  app.innerHTML=title("จับคู่คอลัมน์เข้ากับเทมเพลต",`ไฟล์ ${esc(st.fn)}: ${T.rows.length.toLocaleString()} แถว ${T.head.length} คอลัมน์ ระบบเดาให้แล้ว ตรวจและแก้ได้ ค่าที่ไม่มีในไฟล์ให้เลือก “ไม่มีในไฟล์” และเลือกหน่วยที่ไฟล์ใช้ ระบบจะแปลงเป็นหน่วยมาตรฐานให้`)+
  '<div class="row c2" style="align-items:start"><div class="card" id="mp"></div><div class="card wrap"><b>ตัวอย่างข้อมูลดิบ 5 แถวแรก</b><table style="margin-top:8px"><tr>'+T.head.map(h=>`<th>${esc(h)}</th>`).join("")+'</tr>'+T.rows.slice(0,5).map(r=>'<tr>'+T.head.map((h,i)=>`<td>${esc(r[i]||"")}</td>`).join("")+'</tr>').join("")+'</table></div></div>'+
- '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="dd" '+(st.dedupe?"checked":"")+' style="accent-color:var(--ac)">ลบแถวที่ซ้ำกัน (จุดเก็บ เวลา และค่าเหมือนกันทุกช่อง)</label><div class="foot"><button id="go">คลีนข้อมูล</button><span class="err" id="er"></span></div>';
+ '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="dd" '+(st.dedupe?"checked":"")+' style="accent-color:var(--ac)">ลบแถวที่ซ้ำกัน (จุดเก็บ เวลา และค่าเหมือนกันทุกช่อง)</label><div class="card" style="margin-top:12px"><b>ตัวเลือกการคลีนเพิ่มเติม</b><label style="display:flex;flex-direction:column;gap:4px;margin-top:10px">ค่าต่ำกว่าขีดจำกัดการตรวจวัด (เช่น &lt;0.5, ND, ไม่พบ)<select id="lodsel"><option value="half"'+(st.lod=="half"?" selected":"")+'>แทนด้วยครึ่งหนึ่งของขีดจำกัด (แนะนำ)</option><option value="zero"'+(st.lod=="zero"?" selected":"")+'>แทนด้วย 0</option><option value="skip"'+(st.lod=="skip"?" selected":"")+'>เว้นว่าง (ไม่นำมาคำนวณ)</option></select></label><label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px"><input type="checkbox" id="smo"'+(st.smooth?" checked":"")+' style="margin-top:5px;accent-color:var(--ac)"><span>ปรับค่า pH, DO, BOD, COD ที่พุ่งผิดปกติให้ราบเรียบ (เทียบกับค่าข้างเคียงของจุดเดียวกัน) <span class="mut">เก็บค่าเดิมไว้ในรายงานการคลีน แต่อาจทำให้ผลเทียบเกณฑ์เปลี่ยน ปิดได้ถ้าต้องการใช้ค่าจริง</span></span></label></div><div class="foot"><button id="go">คลีนข้อมูล</button><span class="err" id="er"></span></div>';
 $("#mp").innerHTML=fields.map(([f,t])=>`<div class="mrow"><span>${t}</span><div style="display:flex;gap:6px;min-width:0"><select data-f="${f}" style="flex:1;min-width:0"><option value="-1">— ไม่มีในไฟล์ —</option>${T.head.map((h,i)=>`<option value="${i}"${M[f]==i?" selected":""}>${esc(h||"(ไม่มีชื่อ)")}</option>`).join("")}</select>${UN[f]?`<select data-u="${f}" title="หน่วยในไฟล์" style="flex:none;width:130px">${UN[f].map((u,i)=>`<option value="${i}"${(st.unit[f]||0)==i?" selected":""}>${u[0]}</option>`).join("")}</select>`:""}</div></div>`).join("");
  document.querySelectorAll("#mp select[data-f]").forEach(s=>s.onchange=()=>{M[s.dataset.f]=+s.value});
  document.querySelectorAll("#mp select[data-u]").forEach(s=>s.onchange=()=>{st.unit[s.dataset.u]=+s.value});
-  $("#dd").onchange=e=>{st.dedupe=e.target.checked};
+  $("#dd").onchange=e=>{st.dedupe=e.target.checked};$("#lodsel").onchange=e=>{st.lod=e.target.value};$("#smo").onchange=e=>{st.smooth=e.target.checked};
  $("#go").onclick=()=>{
   if(!(M.date>=0)){$("#er").textContent="กรุณาเลือกคอลัมน์วันที่";return}
   if(!K.some(k=>M[k]>=0)){$("#er").textContent="กรุณาจับคู่ค่าพารามิเตอร์อย่างน้อย 1 ค่า";return}
@@ -356,7 +508,7 @@ $("#mp").innerHTML=fields.map(([f,t])=>`<div class="mrow"><span>${t}</span><div 
 const mapTxt=()=>{const M=st.map,h=st.tbl.head,a=[];if(M.date>=0)a.push(`${h[M.date]} → วันที่`);if(M.site>=0)a.push(`${h[M.site]} → ชื่อข้อมูล`);K.forEach(k=>{if(M[k]>=0)a.push(h[M[k]]===k?k:`${h[M[k]]} → ${k}`)});return esc(a.join(", "))};
 const issuesHtml=()=>{
  const r=st.rep,M=st.map,rk=Object.keys(r.rng),cv=K.filter(k=>UN[k]&&M[k]>=0&&(st.unit[k]||0)>0);
- if(!rk.length&&!r.stuck.length&&!cv.length&&!r.hints.length)return '<div class="alert okk"><b>ไม่พบค่าผิดปกติ</b><div>ทุกค่าอยู่ในช่วงที่เป็นไปได้ และไม่พบค่าซ้ำติดกันผิดปกติ</div></div>';
+ if(!rk.length&&!r.stuck.length&&!cv.length&&!r.hints.length)return (Object.keys(r.cn).length||r.cons.length||r.notes.length)?"":'<div class="alert okk"><b>ไม่พบค่าผิดปกติ</b><div>ทุกค่าอยู่ในช่วงที่เป็นไปได้ และไม่พบค่าซ้ำติดกันผิดปกติ</div></div>';
  const th=x=>`<tr>${x.map(t=>`<th>${t}</th>`).join("")}</tr>`;
  return '<div class="card" style="margin-bottom:16px"><b>ตรวจความผิดปกติของข้อมูล</b>'+
  (cv.length?`<p class="mut" style="margin:8px 0 0">แปลงหน่วยแล้ว: ${cv.map(k=>`${k} จาก ${esc(UN[k][st.unit[k]][0])} เป็น ${P[k].u}`).join(" · ")}</p>`:"")+
@@ -364,27 +516,43 @@ const issuesHtml=()=>{
  (rk.length?`<p style="margin:12px 0 4px"><b>ค่าที่เป็นไปไม่ได้ (ลบเป็นค่าว่างแล้ว)</b></p><div class="wrap"><table>${th(["พารามิเตอร์","ช่วงที่เป็นไปได้","จำนวนค่าที่ลบ","ตัวอย่างค่า"])}${rk.map(k=>`<tr><td><b>${k}</b></td><td>${RNG[k][0]} – ${RNG[k][1]} ${P[k].u}</td><td>${r.rng[k].n.toLocaleString()}</td><td>${r.rng[k].ex.map(v=>fmt(v,2)).join(", ")}</td></tr>`).join("")}</table></div>`:"")+
  (r.stuck.length?`<p style="margin:12px 0 4px"><b>ค่าซ้ำติดกันตั้งแต่ ${STUCK} ครั้งขึ้นไป (สงสัยเซนเซอร์ค้าง)</b> <span class="mut">แจ้งเตือนเท่านั้น ไม่ได้ลบ</span></p><div class="wrap"><table>${th(["พารามิเตอร์","จุดตรวจวัด","ค่าที่ซ้ำ","ซ้ำติดกัน (ครั้ง)","ช่วงวันที่"])}${r.stuck.slice(0,10).map(x=>`<tr><td><b>${x.k}</b></td><td>${esc(x.site)}</td><td>${fmt(x.v,2)}</td><td>${x.n}</td><td>${dmy(x.from)} – ${dmy(x.to)}</td></tr>`).join("")}</table></div>${r.stuck.length>10?`<p class="mut" style="margin:6px 0 0">และอีก ${r.stuck.length-10} ช่วง</p>`:""}`:"")+'</div>';
 };
+const cell=v=>typeof v=="number"?fmt(v,2):esc(v==null?"":v);
+const logHtml=()=>{
+ const r=st.rep,codes=LGO.filter(c=>r.cn[c]);
+ const th=x=>`<tr>${x.map(t=>`<th>${t}</th>`).join("")}</tr>`;
+ const cons=r.cons.length?'<div class="card" style="margin-bottom:16px"><b>ตรวจความสอดคล้องระหว่างพารามิเตอร์</b> <span class="mut">แจ้งเตือนเท่านั้น ไม่ได้แก้หรือลบ</span>'+r.cons.map(c=>`<p style="margin:10px 0 2px"><b>${esc(c.label)}</b> — พบ ${c.n.toLocaleString()} จาก ${c.tot.toLocaleString()} แถวที่เทียบได้</p><p class="mut" style="margin:0">ตัวอย่าง: ${c.ex.map(esc).join(" · ")}</p>`).join("")+'</div>':"";
+ if(!codes.length&&!r.notes.length)return cons;
+ return '<div class="card" style="margin-bottom:16px"><b>สิ่งที่ตรวจพบและสิ่งที่คลีน</b> <span class="mut">กดหัวข้อเพื่อดูตัวอย่าง (สูงสุด 8 รายการ) · รายการทั้งหมดอยู่ในรายงานการคลีน (CSV)</span>'+
+  r.notes.map(n=>`<p class="mut" style="margin:8px 0 0">${esc(n)}</p>`).join("")+
+  codes.map(c=>`<details style="margin-top:10px"><summary style="cursor:pointer"><b>${LGL[c]}</b> — ${r.cn[c].toLocaleString()} รายการ</summary><div class="wrap" style="margin-top:6px"><table>${th(["แถวในไฟล์","จุดตรวจวัด","วันที่","พารามิเตอร์","ค่าเดิม","หลังคลีน","หมายเหตุ"])}${r.ex[c].map(e=>`<tr><td>${e.row}</td><td>${esc(e.site||"–")}</td><td>${esc(e.d||"–")}</td><td>${e.k?`<b>${e.k}</b>`:"–"}</td><td>${cell(e.from)}</td><td>${cell(e.to)}</td><td style="white-space:normal;min-width:200px">${esc(e.note||"")}</td></tr>`).join("")}</table></div>${r.cn[c]>8?`<p class="mut" style="margin:6px 0 0">และอีก ${(r.cn[c]-8).toLocaleString()} รายการ</p>`:""}</details>`).join("")+
+  (r.cn.spk?'<p class="mut" style="margin:12px 0 0">หมายเหตุ: ค่าที่ปรับให้ราบเรียบอาจทำให้ผลเทียบเกณฑ์เปลี่ยน ตรวจค่าเดิมในรายงานก่อนใช้งานจริง หรือปิดตัวเลือกนี้ที่หน้าจับคู่คอลัมน์</p>':"")+'</div>'+cons;
+};
 V.clean=()=>{
  const r=st.rep,it=(l,v,w)=>`<div class="card"><div class="mut">${l}</div><div class="big" style="color:${w&&v>0?"var(--warn)":"var(--ink)"}">${v.toLocaleString()}</div></div>`;
  const any=st.rows.some(o=>o.t!="00:00"),cols=K;
  app.innerHTML=title("ผลการคลีนข้อมูล",`ไฟล์ ${esc(st.fn)}: ลบแถวซ้ำและแถวที่ใช้ไม่ได้ออก แล้วจัดเป็นรูปแบบเทมเพลตของเรา<br>จับคู่ให้แล้ว: ${mapTxt()}`)+
- `<div class="row c4">${it("แถวทั้งหมดในไฟล์",r.total)}${it("แถวซ้ำที่ลบออก",r.dup,1)}${it("วันที่อ่านไม่ได้ / แถวไม่มีค่า",r.badDate+r.empty,1)}${it("ค่าติดลบที่ล้างเป็นค่าว่าง",r.neg,1)}</div>`+(r.kept?issuesHtml():"")+
+ `<div class="row c4">${it("แถวทั้งหมดในไฟล์",r.total)}${it("แถวซ้ำที่ลบออก",r.dup,1)}${it("วันที่อ่านไม่ได้ / แถวไม่มีค่า",r.badDate+r.empty,1)}${it("ค่าติดลบที่ล้างเป็นค่าว่าง",r.neg,1)}</div><div class="row c4">${it("แถวที่จุดและเวลาซ้ำแต่ค่าต่างกัน (ลบ)",r.cn.conf||0,1)}${it("ค่าต่ำกว่าขีดจำกัดการตรวจวัด (แทนค่า)",r.cn.lod||0,1)}${it("ค่าที่ไม่ใช่ตัวเลข (ล้าง)",r.cn.txt||0,1)}${it("ค่าพุ่งผิดปกติที่ปรับให้ราบเรียบ",r.cn.spk||0,1)}</div>`+(r.kept?logHtml()+issuesHtml():"")+
  (r.kept?`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>ข้อมูลที่ใช้ต่อ ${r.kept.toLocaleString()} แถว</b><span class="mut">คงไว้ ${fmt(r.kept/r.total*100,0)}% · ช่วง ${dmy(st.lo)} ถึง ${dmy(st.hi)}</span></div><div class="bar"><i style="width:${r.kept/r.total*100}%;background:var(--ok)"></i></div></div>
  <div class="card wrap" style="margin-top:16px"><b>ไฟล์ที่คลีนแล้ว (10 แถวแรก)</b><span class="mut"> จัดเป็นเทมเพลตเดียวกัน ช่องที่ไม่มีในไฟล์เว้นว่างไว้</span><table style="margin-top:8px"><tr><th>ชื่อข้อมูล</th><th>วันที่</th>${cols.map(k=>`<th>${k}</th>`).join("")}</tr>${st.rows.slice(0,10).map(o=>`<tr><td>${esc(o.site)}</td><td>${dmy(o.d)}${any?" "+o.t:""}</td>${cols.map(k=>`<td>${o[k]==null?"":fmt(o[k],k=="pH"?2:1)}</td>`).join("")}</tr>`).join("")}</table></div>
- <div class="foot"><button id="nx">เลือกมาตรฐานอ้างอิง</button><button class="ghost" id="dl">ดาวน์โหลดไฟล์ที่คลีนแล้ว (CSV)</button><button class="ghost" id="bk">แก้การจับคู่คอลัมน์</button></div>`
+ <div class="foot"><button id="nx">เลือกมาตรฐานอ้างอิง</button><button class="ghost" id="dl">ดาวน์โหลดไฟล์ที่คลีนแล้ว (CSV)</button><button class="ghost" id="dlg">ดาวน์โหลดรายงานการคลีน (CSV)</button><button class="ghost" id="bk">แก้การจับคู่คอลัมน์</button></div>`
  :`<div class="alert"><b>ไม่พบแถวที่ใช้ได้</b><div>ส่วนใหญ่เกิดจากเลือกคอลัมน์วันที่ผิด หรือรูปแบบวันที่ที่อ่านไม่ได้ (รองรับ 2026-11-19, 19/11/2026, 1 ม.ค. 2566 และปี พ.ศ.) กลับไปตรวจการจับคู่คอลัมน์อีกครั้ง</div></div><div class="foot"><button id="bk">แก้การจับคู่คอลัมน์</button></div>`);
  $("#bk").onclick=()=>go("map");
  if(r.kept){$("#nx").onclick=()=>go("standard");
+  $("#dlg").onclick=()=>save("cleaning-report-"+st.fn.replace(/\.[^.]+$/,"")+".csv","ประเภท,แถวในไฟล์,ชื่อข้อมูล,วันที่,พารามิเตอร์,ค่าเดิม,ค่าหลังคลีน,หมายเหตุ\n"+r.log.map(e=>[LGL[e.c],e.row,e.site,e.d,e.k,e.from,e.to,e.note].map(x=>csvq(String(x==null?"":x))).join(",")).join("\n"));
   $("#dl").onclick=()=>save("cleaned-"+st.fn.replace(/\.[^.]+$/,"")+".csv","ชื่อข้อมูล,วันที่,"+cols.join(",")+"\n"+st.rows.map(o=>[csvq(o.site),dmy(o.d)+(any?" "+o.t:"")].concat(cols.map(k=>o[k]==null?"":o[k])).join(",")).join("\n"))}
 };
 V.standard=()=>{
  app.innerHTML=title("เลือกมาตรฐานอ้างอิง","เลือกมาตรฐานที่ต้องการใช้เทียบค่า แดชบอร์ดทุกหน้าจะคำนวณตามมาตรฐานนี้ และเปลี่ยนได้ทุกเมื่อ")+'<div class="row c2" style="align-items:start"><div id="sl"></div><div class="card wrap" id="pv"></div></div>'+(st.sites.length>1?'<div class="card" id="ps"></div>':'')+'<div class="foot"><button id="go">ดูแดชบอร์ด</button></div>';
  const draw=()=>{
-  $("#sl").innerHTML=Object.keys(S).map(k=>`<label class="std${k==st.std?" sel":""}"><input type="radio" name="s" value="${k}"${k==st.std?" checked":""}><span><b>${S[k].n}</b><br><span class="mut">${S[k].d}</span></span></label>`).join("");
+  const inB=st.std.startsWith("bld");
+  $("#sl").innerHTML=["ind","bld","srf","cus"].map(k=>{const on=k=="bld"?inB:k==st.std,n=k=="bld"?"น้ำทิ้งจากอาคาร (ไทย)":S[k].n,d=k=="bld"?"อาคารที่ต้องบำบัดน้ำเสียก่อนระบาย · เลือกประเภทอาคาร ก–ง":S[k].d;
+   return `<label class="std${on?" sel":""}"><input type="radio" name="s" value="${k}"${on?" checked":""}><span><b>${n}</b><br><span class="mut">${d}</span></span></label>`+(k=="bld"&&inB?`<div class="subpick"><b>ประเภทอาคาร</b> <span class="mut">ตามชนิดและขนาดอาคาร</span>${["bldA","bldB","bldC","bldD1","bldD2"].map(x=>`<label><input type="radio" name="b" value="${x}"${x==st.std?" checked":""}><span>${S[x].n.replace("น้ำทิ้งจากอาคาร ","").replace(" (ไทย)","")}<br><span class="mut">BOD ≤ ${S[x].L.BOD[1]} · TSS ≤ ${S[x].L.TSS[1]} mg/L</span></span></label>`).join("")}<details><summary>ดูตารางจัดประเภทอาคารตามขนาด</summary>${bldTable()}</details></div>`:"")}).join("");
   const c=st.std=="cus";
-  $("#pv").innerHTML=`<b>ค่าเกณฑ์ที่ใช้</b> <span class="mut">${c?"แก้ไขได้ทุกพารามิเตอร์":"แสดงครบทุกพารามิเตอร์ แม้ไม่มีในไฟล์ของคุณ"}</span><table style="margin-top:8px"><tr><th>พารามิเตอร์</th><th>${c?"ต่ำสุด":"เกณฑ์ (หน่วยตามมาตรฐาน)"}</th>${c?"<th>สูงสุด</th><th>หน่วย</th>":""}</tr>`+K.map(k=>{const l=S[st.std].L[k]||[null,null],no=!st.avail.includes(k);
+  $("#pv").innerHTML=`<b>ค่าเกณฑ์ที่ใช้</b> <span class="mut">${c?"แก้ไขได้ทุกพารามิเตอร์":"แสดงครบทุกพารามิเตอร์ แม้ไม่มีในไฟล์ของคุณ"}</span> <button class="ghost" id="srcb" style="padding:4px 12px;margin-left:8px">ดาวน์โหลดแหล่งอ้างอิง</button><table style="margin-top:8px"><tr><th>พารามิเตอร์</th><th>${c?"ต่ำสุด":"เกณฑ์ (หน่วยตามมาตรฐาน)"}</th>${c?"<th>สูงสุด</th><th>หน่วย</th>":""}</tr>`+K.map(k=>{const l=S[st.std].L[k]||[null,null],no=!st.avail.includes(k);
    return `<tr><td><b>${k}</b> <span class="mut">${P[k].n} ${P[k].u}</span>${no?' <span class="pill">ไม่มีในไฟล์</span>':""}</td>`+(c?`<td><input type="number" step="any" data-k="${k}" data-i="0" value="${l[0]==null?"":l[0]}" style="width:90px"></td><td><input type="number" step="any" data-k="${k}" data-i="1" value="${l[1]==null?"":l[1]}" style="width:90px"></td><td class="mut">${P[k].u||"–"}</td>`:`<td>${limTxtS(st.std,k)}</td>`)+"</tr>"}).join("")+`</table>${S[st.std].note?`<p class="mut" style="margin:10px 0 0">${S[st.std].note}</p>`:""}<p class="mut" style="margin:10px 0 0">ค่าเกณฑ์ทุกค่าใช้หน่วยตามมาตรฐาน (หน่วยแสดงต่อท้ายค่า) ระบบแปลงหน่วยของข้อมูลให้ตรงกันก่อนเทียบ</p><p class="mut" style="margin:10px 0 0">ค่าเกณฑ์เป็นตัวอย่างสำหรับสาธิต โปรดตรวจกับประกาศล่าสุดก่อนใช้รายงานจริง</p>`;
-  document.querySelectorAll("input[name=s]").forEach(i=>i.onchange=()=>{st.std=i.value;draw()});
+  document.querySelectorAll("input[name=s]").forEach(i=>i.onchange=()=>{st.std=i.value=="bld"?(st.bt||"bldA"):i.value;if(st.std.startsWith("bld"))st.bt=st.std;draw()});
+  document.querySelectorAll("input[name=b]").forEach(i=>i.onchange=()=>{st.std=st.bt=i.value;draw()});
+  $("#srcb").onclick=()=>showSrc(st.std);
   document.querySelectorAll("#pv input").forEach(i=>i.onchange=()=>{const l=S.cus.L[i.dataset.k]||(S.cus.L[i.dataset.k]=[null,null]);l[+i.dataset.i]=i.value===""?null:+i.value});
   if($("#ps")){$("#ps").innerHTML=`<b>มาตรฐานรายสถานี</b> <span class="mut">ค่าเริ่มต้นใช้ตามมาตรฐานหลักที่เลือกด้านบน ตั้งให้ต่างกันได้ถ้าแต่ละจุดอยู่คนละประเภทแหล่งน้ำ</span><div style="margin-top:8px">`+st.sites.map((x,i)=>`<div class="mrow"><span>${esc(x)}</span><select data-s="${i}"><option value="">ตามมาตรฐานหลัก (${S[st.std].n})</option>${Object.keys(S).map(k=>`<option value="${k}"${st.ss[x]==k?" selected":""}>${S[k].n}</option>`).join("")}</select></div>`).join("")+"</div>";
    document.querySelectorAll("#ps select").forEach(e=>e.onchange=()=>{const x=st.sites[+e.dataset.s];if(e.value)st.ss[x]=e.value;else delete st.ss[x]})}
@@ -403,43 +571,173 @@ V.trends=()=>{
  const rows=view(),k=st.pm,s=stats(k,rows),a=alerts(k,rows),multi=st.sites.length>1&&!st.f.site;
  app.innerHTML='<button class="ghost" id="bkov" style="margin-bottom:12px">← กลับไปภาพรวม</button>'+title("รายละเอียดและแจ้งเตือน","เลือกพารามิเตอร์และช่วงวันที่ เส้นประสีแดงคือค่าเกณฑ์ จุดแดงคือช่วงที่เกินเกณฑ์")+bar()+
  '<div class="tabs" id="pt">'+st.avail.map(x=>{const n=alerts(x,rows).length;return `<button data-k="${x}" class="${x==k?"on":""}">${x}${n?`<b>●</b>`:""}</button>`}).join("")+'</div>'+
- `<div class="card"><b>${k} ${P[k].n}</b> <span class="mut">${P[k].u} ${rows.filter(o=>o[k]!=null).length>800?"· แสดงค่าเฉลี่ยรายวัน":""}</span>${cb(k,rows,bigW(),bigH(),false)}</div>`+
+ `<div class="card"><b>${k} ${P[k].n}</b> <span class="mut">${P[k].u} ${rows.filter(o=>o[k]!=null).length>800?"· แสดงค่าเฉลี่ยรายวัน":""}</span><div id="cz" style="touch-action:pan-y;user-select:none;-webkit-user-select:none"></div><div class="foot" style="margin-top:6px;gap:8px;align-items:center"><button class="ghost" id="zo" aria-label="ซูมออก" style="flex:0 0 auto;min-width:48px">−</button><button class="ghost" id="zi" aria-label="ซูมเข้า" style="flex:0 0 auto;min-width:48px">＋</button><button class="ghost" id="zr" style="flex:0 0 auto">รีเซ็ต</button><span class="mut" style="flex:1 1 160px">ถ่างสองนิ้วเพื่อซูม · ลากเพื่อเลื่อน · แกนตั้งคงที่</span></div></div>`+
  (s?`<div class="row c4" style="margin-top:16px"><div class="card"><div class="mut">ค่าเฉลี่ย</div><div class="big">${fmt(s.mean,2)}</div></div><div class="card"><div class="mut">ต่ำสุด</div><div class="big">${fmt(s.min,2)}</div></div><div class="card"><div class="mut">สูงสุด</div><div class="big">${fmt(s.max,2)}</div></div><div class="card"><div class="mut">ค่าเกณฑ์ (หน่วยตามมาตรฐาน)</div><div class="big" style="font-size:22px">${limTxt(k)}</div></div></div>`:"")+
  (!anyLim(k)?`<div class="alert"><b>มาตรฐานนี้ไม่มีเกณฑ์ของ ${k}</b><div>เลือกมาตรฐานอื่น หรือกำหนดเกณฑ์เองที่หน้าเลือกมาตรฐาน</div></div>`:
  a.length?`<div class="alert"><b>แจ้งเตือน: ${k} เกินเกณฑ์ใน ${a.length} วัน (${s.ex} ครั้งจาก ${s.n})</b><div class="alist"><table><tr><th>วันที่</th><th>จำนวนครั้งที่เกิน</th><th>ค่าที่เกินมากที่สุด</th>${multi?"<th>จุดเก็บ</th>":""}</tr>${a.map(x=>`<tr><td>${dmy(x.d)}</td><td>${x.n}</td><td>${fmt(x.w,2)} ${P[k].u}</td>${multi?`<td>${esc(Object.keys(x.sites).join(", "))}</td>`:""}</tr>`).join("")}</table></div></div>`:
  '<div class="alert okk"><b>ไม่พบค่าเกินเกณฑ์ในช่วงที่เลือก</b></div>');
- bindBar("trends");$("#bkov").onclick=()=>go("overview");document.querySelectorAll("#pt button").forEach(b=>b.onclick=()=>{st.pm=b.dataset.k;V.trends()});
+ bindBar("trends");$("#bkov").onclick=()=>go("overview");
+ {const sr=msr(k,rows,false),cz=$("#cz"),pts=new Map();let zm={a:0,b:1},raf=0,pd=0;
+  const span=()=>{let a=Infinity,b=-Infinity;sr.forEach(z=>{if(z.pts[0].x<a)a=z.pts[0].x;const e=z.pts[z.pts.length-1].x;if(e>b)b=e});return (b-a)||1};
+  const minF=Math.max(.005,Math.min(1,432e5/span()));
+  const zdraw=()=>{cz.innerHTML=chart(sr,k,bigW(),bigH(),false,zm)+legend(sr);const on=zm.b-zm.a<.999;$("#zr").disabled=!on;$("#zo").disabled=!on;$("#zi").disabled=zm.b-zm.a<=minF*1.001};
+  const clampZ=()=>{const s=Math.min(1,Math.max(minF,zm.b-zm.a));if(zm.a<0)zm.a=0;zm.b=zm.a+s;if(zm.b>1){zm.b=1;zm.a=1-s}};
+  const zat=(u,f)=>{const s=zm.b-zm.a,ns=Math.min(1,Math.max(minF,s*f)),c=zm.a+u*s;zm.a=c-u*ns;zm.b=zm.a+ns;clampZ()};
+  const rect=()=>cz.querySelector("svg").getBoundingClientRect();
+  const uOf=cx=>{const r=rect(),w=bigW(),p=(cx-r.left)/r.width*w;return Math.min(1,Math.max(0,(p-64)/(w-78)))};
+  const sched=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;zdraw()})};
+  cz.onpointerdown=e=>{pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{cz.setPointerCapture(e.pointerId)}catch(_){}if(pts.size==2){const[a,b]=[...pts.values()];pd=Math.hypot(a.x-b.x,a.y-b.y)}};
+  cz.onpointermove=e=>{const p=pts.get(e.pointerId);if(!p)return;const px=p.x;p.x=e.clientX;p.y=e.clientY;
+   if(pts.size==1){if(zm.b-zm.a<.999){const r=rect(),du=(e.clientX-px)/(r.width*(bigW()-78)/bigW()),s=zm.b-zm.a;zm.a-=du*s;zm.b=zm.a+s;clampZ();sched()}}
+   else if(pts.size==2){const[a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pd>0&&d>0){zat(uOf((a.x+b.x)/2),pd/d);sched()}pd=d}};
+  cz.onpointerup=cz.onpointercancel=e=>{pts.delete(e.pointerId);pd=0};
+  cz.addEventListener("wheel",e=>{if(!e.ctrlKey)return;e.preventDefault();zat(uOf(e.clientX),e.deltaY>0?1.15:1/1.15);sched()},{passive:false});
+  $("#zi").onclick=()=>{zat(.5,.5);zdraw()};$("#zo").onclick=()=>{zat(.5,2);zdraw()};$("#zr").onclick=()=>{zm={a:0,b:1};zdraw()};
+  zdraw()}
+document.querySelectorAll("#pt button").forEach(b=>b.onclick=()=>{st.pm=b.dataset.k;V.trends()});
 };
-function rankHtml(){
+function rankData(){
  const rows=st.rows.filter(o=>o.d>=st.f.from&&o.d<=st.f.to);
- const R=st.sites.map(si=>{const rs=rows.filter(o=>o.site==si),pr={},days={};let n=0,ex=0;
+ return st.sites.map(si=>{const rs=rows.filter(o=>o.site==si),pr={},days={};let n=0,ex=0;
   st.avail.forEach(k=>{const t=stats(k,rs);if(t&&lim(k,si)){pr[k]=t;n+=t.n;ex+=t.ex}});
   rs.forEach(o=>{if(st.avail.some(k=>o[k]!=null&&evalP(k,o[k],si)===false))days[o.d]=1});
   return {si,n,ex,pct:n?ex/n*100:null,days:Object.keys(days).length,pr,bad:Object.keys(pr).filter(k=>pr[k].ex>0).sort((a,b)=>pr[b].pct-pr[a].pct)}
  }).sort((a,b)=>(b.pct==null?-1:b.pct)-(a.pct==null?-1:a.pct));
- const dot=x=>`<i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${sc(x)};margin-right:6px"></i>`;
- const cell=(p)=>p==null?'<td class="mut">–</td>':`<td style="${p>=5?"background:var(--badbg);color:var(--bad);font-weight:600":p>0?"background:var(--wbg);color:var(--warn);font-weight:600":"background:var(--okbg);color:var(--ok)"}">${fmt(p,1)}%</td>`;
- return `<div class="card wrap" style="margin-top:16px"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (เทียบทุกสถานีในช่วงวันที่ที่เลือก)</span><table style="margin-top:8px"><tr><th>อันดับ</th><th>สถานี</th><th>มาตรฐาน</th><th>ค่าที่มีเกณฑ์</th><th>เกินเกณฑ์</th><th style="width:140px">สัดส่วนเกิน</th><th>วันที่เกิน</th><th>พารามิเตอร์ที่เกิน (สัดส่วน)</th></tr>${R.map((x,i)=>`<tr><td>${x.pct==null?"–":i+1}</td><td>${dot(x.si)}${esc(x.si)}</td><td>${S[stdOf(x.si)].n}</td><td>${x.n.toLocaleString()}</td><td>${x.pct==null?"–":x.ex.toLocaleString()}</td><td>${x.pct==null?'<span class="pill">ไม่มีเกณฑ์</span>':`<div style="display:flex;gap:8px;align-items:center"><div class="bar no-print" style="flex:1"><i style="width:${Math.min(100,x.pct)}%;background:${x.pct>=5?"var(--bad)":x.pct>0?"var(--warn)":"var(--ok)"}"></i></div><span>${fmt(x.pct,1)}%</span></div>`}</td><td>${x.pct==null?"–":x.days}</td><td>${x.bad.length?x.bad.map(k=>k+" "+fmt(x.pr[k].pct,1)+"%").join(", "):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</table></div>
- <div class="card wrap" style="margin-top:16px"><b>สัดส่วนค่าเกินเกณฑ์ แยกสถานีและพารามิเตอร์</b> <span class="mut">เขียว = ไม่เกิน · เหลือง = เกินน้อยกว่า 5% · แดง = เกิน 5% ขึ้นไป · – = ไม่มีเกณฑ์หรือไม่มีข้อมูล</span><table style="margin-top:8px"><tr><th>สถานี</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr>${R.map(x=>`<tr><td>${dot(x.si)}${esc(x.si)}</td>${st.avail.map(k=>cell(x.pr[k]?x.pr[k].pct:null)).join("")}</tr>`).join("")}</table></div>`;
 }
+function rankHtml(){
+ const R=rankData();
+ const dot=x=>`<i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${sc(x)};margin-right:6px"></i>`;
+ const cell=p=>p==null?'<td class="mut">–</td>':`<td style="${p>=5?"background:var(--badbg);color:var(--bad);font-weight:600":p>0?"background:var(--wbg);color:var(--warn);font-weight:600":"background:var(--okbg);color:var(--ok)"}">${fmt(p,1)}%</td>`;
+ return `<div class="card wrap" style="margin-top:16px"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (เทียบทุกสถานีในช่วงวันที่ที่เลือก)</span><table style="margin-top:8px"><thead><tr><th>อันดับ</th><th>สถานี</th><th>มาตรฐาน</th><th>ค่าที่มีเกณฑ์</th><th>เกินเกณฑ์</th><th style="width:140px">สัดส่วนเกิน</th><th>วันที่เกิน</th><th>พารามิเตอร์ที่เกิน (สัดส่วน)</th></tr></thead><tbody>${R.map((x,i)=>`<tr><td>${x.pct==null?"–":i+1}</td><td class="tx">${dot(x.si)}${esc(x.si)}</td><td class="tx">${S[stdOf(x.si)].n}</td><td>${x.n.toLocaleString()}</td><td>${x.pct==null?"–":x.ex.toLocaleString()}</td><td>${x.pct==null?'<span class="pill">ไม่มีเกณฑ์</span>':`<div style="display:flex;gap:8px;align-items:center"><div class="bar no-print" style="flex:1"><i style="width:${Math.min(100,x.pct)}%;background:${x.pct>=5?"var(--bad)":x.pct>0?"var(--warn)":"var(--ok)"}"></i></div><span>${fmt(x.pct,1)}%</span></div>`}</td><td>${x.pct==null?"–":x.days}</td><td class="tx">${x.bad.length?x.bad.map(k=>k+" "+fmt(x.pr[k].pct,1)+"%").join(", "):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div>
+ <div class="card wrap" style="margin-top:16px"><b>สัดส่วนค่าเกินเกณฑ์ แยกสถานีและพารามิเตอร์</b> <span class="mut">เขียว = ไม่เกิน · เหลือง = เกินน้อยกว่า 5% · แดง = เกิน 5% ขึ้นไป · – = ไม่มีเกณฑ์หรือไม่มีข้อมูล</span><table style="margin-top:8px"><thead><tr><th>สถานี</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr></thead><tbody>${R.map(x=>`<tr><td class="tx">${dot(x.si)}${esc(x.si)}</td>${st.avail.map(k=>cell(x.pr[k]?x.pr[k].pct:null)).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+// ---- กราฟสำหรับรายงาน
+const figW=()=>Math.max(340,Math.min(720,bigW()));
+function figExceed(items){
+ const w=figW(),rh=28,L=56,R=w-54,H=items.length*rh+46,mx=Math.max(10,Math.ceil(Math.max(...items.map(x=>x.s.pct))/10)*10),X=v=>L+v/mx*(R-L);
+ let s=`<svg viewBox="0 0 ${w} ${H}" width="100%" role="img" aria-label="สัดส่วนค่าเกินเกณฑ์ตามพารามิเตอร์">`;
+ for(let i=0;i<=4;i++){const v=mx*i/4;s+=`<line x1="${X(v)}" x2="${X(v)}" y1="4" y2="${H-34}" stroke="var(--ln)"/><text x="${X(v)}" y="${H-20}" text-anchor="middle">${fmt(v,0)}%</text>`}
+ items.forEach(({k,s:t},i)=>{const y=i*rh+8;s+=`<text x="${L-8}" y="${y+13}" text-anchor="end" style="fill:var(--ink);font-weight:600">${k}</text><rect x="${L}" y="${y}" width="${t.pct>0?Math.max(2,X(t.pct)-L):0}" height="18" rx="3" fill="${t.pct>=5?"var(--bad)":t.pct>0?"var(--warn)":"var(--ok)"}"/><text x="${X(t.pct)+6}" y="${y+13}" style="fill:var(--ink)">${fmt(t.pct,1)}%</text>`});
+ return s+`<text x="${(L+R)/2}" y="${H-3}" text-anchor="middle">ร้อยละของตัวอย่างที่เกินเกณฑ์ (%)</text></svg>`;
+}
+function figMean(rowsF){
+ const w=figW(),rh=46,L=12,R=w-12,H=rowsF.length*rh+6;
+ let s=`<svg viewBox="0 0 ${w} ${H}" width="100%" role="img" aria-label="เปรียบเทียบค่าเฉลี่ยกับเกณฑ์">`;
+ rowsF.forEach(({k,s:t,l},i)=>{const y=i*rh+4,mx=Math.max(t.mean,...l.filter(v=>v!=null))*1.15||1,X=v=>L+v/mx*(R-L),ok=evalP(k,t.mean,sv()[0])!==false;
+  s+=`<text x="${L}" y="${y+12}" style="fill:var(--ink);font-weight:600">${k}</text><text x="${L+36}" y="${y+12}">เฉลี่ย ${fmt(t.mean,2)} · เกณฑ์ ${limTxt(k)}</text><rect x="${L}" y="${y+18}" width="${R-L}" height="12" rx="3" fill="var(--ln)" opacity=".5"/><rect x="${L}" y="${y+18}" width="${Math.max(2,X(t.mean)-L)}" height="12" rx="3" fill="${ok?"var(--ok)":"var(--bad)"}"/>`;
+  l.forEach(v=>{if(v!=null)s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${y+13}" y2="${y+35}" stroke="var(--ink)" stroke-width="2"/>`})});
+ return s+"</svg>";
+}
+// ---- ส่งออก Excel (.xlsx) หรือ CSV สำรอง
+const loadX=()=>window.ExcelJS?Promise.resolve():new Promise((ok,no)=>{const e=document.createElement("script");e.src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js";e.onload=ok;e.onerror=()=>no(new Error("load"));document.head.appendChild(e)});
+async function exportReport(xlsx){
+ const rows=view(),items=st.avail.map(k=>({k,s:stats(k,rows)})).filter(x=>x.s);
+ const hdr=["รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน - AquaCheck","มาตรฐานอ้างอิง: "+stdLabel(),"จุดตรวจวัด: "+(st.f.site||"ทุกจุดตรวจวัด ("+st.sites.length+" สถานี)"),"ช่วงวันที่: "+dmy(st.f.from)+" ถึง "+dmy(st.f.to)];
+ const T=[{n:"สรุปพารามิเตอร์",c:[["พารามิเตอร์","t"],["ชื่อ","t"],["ค่าเกณฑ์ (หน่วยตามมาตรฐาน)","t"],["เฉลี่ย","n"],["ต่ำสุด","n"],["สูงสุด","n"],["ตัวอย่าง","i"],["เกินเกณฑ์ (ครั้ง)","i"],["สัดส่วนเกิน (%)","p"],["สถานะ","s"]],
+  r:items.map(({k,s})=>[k,P[k].n,limTxt(k),s.mean,s.min,s.max,s.n,anyLim(k)?s.ex:null,anyLim(k)?s.pct:null,!anyLim(k)?"ไม่มีเกณฑ์":s.ex?"เกินเกณฑ์":"ผ่านทุกค่า"])}];
+ if(st.sites.length>1){
+  T.push({n:"จัดอันดับสถานี",c:[["อันดับ","i"],["สถานี","t"],["มาตรฐาน","t"],["ค่าที่มีเกณฑ์","i"],["เกินเกณฑ์ (ครั้ง)","i"],["สัดส่วนเกิน (%)","p"],["วันที่เกิน","i"],["พารามิเตอร์ที่เกิน","t"]],
+   r:rankData().map((x,i)=>[x.pct==null?null:i+1,x.si,S[stdOf(x.si)].n,x.n,x.pct==null?null:x.ex,x.pct,x.pct==null?null:x.days,x.bad.map(k=>k+" "+fmt(x.pr[k].pct,1)+"%").join(", ")])});
+  T.push({n:"ค่าเฉลี่ยรายสถานี",c:[["สถานี","t"],["มาตรฐาน","t"]].concat(st.avail.map(k=>[k+(P[k].u?" ("+P[k].u+")":""),"n"])),
+   r:st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return [si,S[stdOf(si)].n].concat(st.avail.map(k=>{const t=stats(k,rs);return t?t.mean:null}))})});
+ }
+ const FM={n:"#,##0.00",i:"#,##0",p:"0.0"},txt=(v,ty)=>v==null?"":typeof v=="number"?(ty=="i"?v.toLocaleString("en"):fmt(v,ty=="p"?1:2)):String(v);
+ if(!xlsx){const t=T[0];save("AquaCheck-summary.csv",hdr.map(csvq).join("\n")+"\n\n"+t.c.map(c=>csvq(c[0])).join(",")+"\n"+t.r.map(r=>r.map((v,j)=>csvq(txt(v,t.c[j][1]))).join(",")).join("\n"));return}
+ await loadX();
+ const wb=new ExcelJS.Workbook();wb.creator="AquaCheck";
+ const B={top:{style:"thin",color:{argb:"FFCBD5E1"}},left:{style:"thin",color:{argb:"FFCBD5E1"}},bottom:{style:"thin",color:{argb:"FFCBD5E1"}},right:{style:"thin",color:{argb:"FFCBD5E1"}}};
+ const SF={"ผ่านทุกค่า":"FFE2F4EA","เกินเกณฑ์":"FFFBE6DE","ไม่มีเกณฑ์":"FFEEF2F4"};
+ T.forEach(t=>{
+  const ws=wb.addWorksheet(t.n),hr=6;
+  hdr.forEach((h,i)=>{const c=ws.getCell(i+1,1);c.value=h;c.font={bold:true,size:i?11:14,color:{argb:i?"FF12303D":"FF0F8B8D"}}});
+  t.c.forEach(([h],j)=>{const c=ws.getCell(hr,j+1);c.value=h;c.font={bold:true,color:{argb:"FFFFFFFF"}};c.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF12303D"}};c.alignment={horizontal:"center",vertical:"middle",wrapText:true};c.border=B});
+  const wd=t.c.map(c=>c[0].length);
+  t.r.forEach((row,i)=>row.forEach((v,j)=>{const ty=t.c[j][1],c=ws.getCell(hr+1+i,j+1);c.value=v==null?null:v;c.border=B;
+   if(FM[ty]){c.numFmt=FM[ty];c.alignment={horizontal:"right"}}else if(ty=="s"){c.alignment={horizontal:"center"};c.fill={type:"pattern",pattern:"solid",fgColor:{argb:SF[v]||"FFFFFFFF"}}}else c.alignment={horizontal:"left"};
+   wd[j]=Math.max(wd[j],txt(v,ty).length)}));
+  wd.forEach((n,j)=>ws.getColumn(j+1).width=Math.min(60,n+4));
+  ws.views=[{state:"frozen",ySplit:hr}];
+ });
+ const buf=await wb.xlsx.writeBuffer();
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));a.download="AquaCheck-summary.xlsx";document.body.appendChild(a);a.click();a.remove();
+}
+const THM=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const thd=d=>(+d.slice(8,10))+" "+THM[+d.slice(5,7)-1]+" "+(+d.slice(0,4)+543);
 V.compliance=()=>{
  const rows=view(),items=st.avail.map(k=>({k,s:stats(k,rows)})).filter(x=>x.s);
  const limited=items.filter(x=>anyLim(x.k)),badItems=limited.filter(x=>x.s.ex>0);
- const now=new Date(),pDate=pad(now.getDate())+"/"+pad(now.getMonth()+1)+"/"+now.getFullYear()+" เวลา "+pad(now.getHours())+":"+pad(now.getMinutes())+" น.";
- const siteLabel=st.f.site?esc(st.f.site):`ทุกจุดตรวจวัด (${st.sites.length} สถานี)`,rp=st.rep;
- const verdict=!limited.length?["ไม่มีเกณฑ์ให้เทียบ","#475569"]:badItems.length?[`เกินเกณฑ์ ${badItems.length} พารามิเตอร์`,"#991b1b"]:["ไม่พบค่าเกินเกณฑ์","#166534"];
- const head=`<div class="print-only doc-header"><div class="doc-title-row"><div><div class="doc-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><div class="doc-title">รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน</div></div><div style="text-align:right;font-size:9pt;color:#475569"><div><b>วันที่ออกรายงาน:</b> ${pDate}</div><div><b>แหล่งข้อมูล:</b> ${esc(st.fn||"-")}</div></div></div>
- <div class="doc-meta-grid"><div><b>มาตรฐานอ้างอิง:</b> ${esc(stdLabel())}</div><div><b>จุดตรวจวัด:</b> ${siteLabel}</div><div><b>ช่วงวันที่:</b> ${dmy(st.f.from)} ถึง ${dmy(st.f.to)}</div><div><b>ข้อมูลที่ใช้วิเคราะห์:</b> ${rows.length.toLocaleString()} รายการ</div><div><b>ข้อมูลดิบในไฟล์:</b> ${rp.total.toLocaleString()} แถว (ตัดแถวซ้ำ ${rp.dup.toLocaleString()} · วันที่อ่านไม่ได้/ไม่มีค่า ${(rp.badDate+rp.empty).toLocaleString()})</div></div></div>
- <div class="print-only doc-summary-boxes"><div class="doc-box"><div class="doc-box-lbl">จำนวนตัวอย่าง</div><div class="doc-box-val">${rows.length.toLocaleString()}</div></div><div class="doc-box"><div class="doc-box-lbl">พารามิเตอร์ที่ตรวจวัด</div><div class="doc-box-val">${items.length}</div></div><div class="doc-box"><div class="doc-box-lbl">สรุปผลเทียบเกณฑ์</div><div class="doc-box-val" style="color:${verdict[1]}">${verdict[0]}</div></div></div>`;
- const foot=`<div class="print-only doc-footer"><div class="doc-note"><b>หมายเหตุ:</b> ค่าเกณฑ์ทุกค่าใช้หน่วยตามมาตรฐาน และข้อมูลถูกแปลงหน่วยให้ตรงกันก่อนเทียบ ${S[st.std].note?"· "+esc(S[st.std].note)+" ":""}· ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อการคัดกรองเบื้องต้น ต้องตรวจกับประกาศฉบับล่าสุดก่อนใช้เป็นเอกสารทางราชการ และผลนี้ไม่ใช่ผลวิเคราะห์จากห้องปฏิบัติการที่ได้รับการรับรอง</div>
- <div class="sign-grid"><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้จัดทำรายงาน</div><div style="font-size:8.5pt;color:#475569">วันที่ ....../....../......</div></div><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้ตรวจสอบ / อนุมัติ</div><div style="font-size:8.5pt;color:#475569">วันที่ ....../....../......</div></div></div></div>`;
- app.innerHTML=head+title("ผลเทียบมาตรฐาน","จำนวนครั้งที่ค่าเกินเกณฑ์ของ "+stdLabel()+" · ค่าเกณฑ์ใช้หน่วยตามมาตรฐาน")+bar()+
- `<div class="card wrap"><b class="print-only" style="margin-bottom:6px">ตารางที่ 1 สรุปผลเทียบค่าพารามิเตอร์กับเกณฑ์มาตรฐาน</b><table><tr><th>พารามิเตอร์</th><th>ค่าเกณฑ์ (หน่วยตามมาตรฐาน)</th><th>เฉลี่ย</th><th>ต่ำสุด</th><th>สูงสุด</th><th>ตัวอย่าง</th><th>เกินเกณฑ์</th><th class="no-print" style="width:140px">สัดส่วน</th><th>สถานะ</th></tr>${items.map(({k,s})=>`<tr><td><b>${k}</b> <span class="mut">${P[k].n}</span></td><td>${limTxt(k)}</td><td>${fmt(s.mean,2)}</td><td>${fmt(s.min,2)}</td><td>${fmt(s.max,2)}</td><td>${s.n.toLocaleString()}</td><td>${anyLim(k)?`${s.ex.toLocaleString()} (${fmt(s.pct,1)}%)`:"–"}</td><td class="no-print"><div class="bar"><i style="width:${Math.min(100,s.pct)}%;background:${s.pct>=5?"var(--bad)":"var(--warn)"}"></i></div></td><td>${pill(k,s)}</td></tr>`).join("")}</table></div>`+(st.sites.length>1?rankHtml():"")+
- (st.sites.length>1?`<div class="card wrap" style="margin-top:16px"><b>ค่าเฉลี่ยแยกตามจุดเก็บ</b> <span class="mut">สีแดงคือเกินเกณฑ์</span><table style="margin-top:8px"><tr><th>จุดเก็บ</th><th>มาตรฐาน</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td>${esc(si)}</td><td>${S[stdOf(si)].n}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:600":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</table></div>`:"")+foot+
- '<div class="foot"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลดสรุป (CSV)</button></div>';
+ const now=new Date(),iso=now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate()),hm=pad(now.getHours())+":"+pad(now.getMinutes());
+ const docNo="AC-"+iso.replace(/-/g,"")+"-"+hm.replace(":","");
+ const rp=st.rep||{cn:{},total:0,kept:0},cn=rp.cn||{};
+ const used=[...new Set(sv().map(x=>stdOf(x)))],usedSrc=[...new Set(used.map(k=>k.startsWith("bld")?"bld":k))].filter(k=>SRC[k]);
+ const uni=k=>new Set(sv().map(x=>JSON.stringify(lim(k,x)))).size==1;
+ const mf=limited.filter(x=>uni(x.k)).map(x=>({...x,l:lim(x.k,sv()[0])})),skip=limited.filter(x=>!uni(x.k)).map(x=>x.k);
+ const multi=st.sites.length>1&&!st.f.site;
+ const R=multi?rankData():[];
+ let tn=0;const cap=t=>`<div class="rpt-cap">ตารางที่ ${++tn} ${t}</div>`;
+ const vk=!limited.length?"na":badItems.length?"bad":"ok";
+ const vl=vk=="na"?"ประเมินไม่ได้":vk=="bad"?"เกินเกณฑ์":"ผ่านเกณฑ์";
+ const vt=vk=="na"?"มาตรฐานที่เลือกไม่มีเกณฑ์สำหรับพารามิเตอร์ที่ตรวจวัด":vk=="bad"?`พบค่าเกินเกณฑ์มาตรฐาน ${badItems.length} จาก ${limited.length} พารามิเตอร์ที่มีเกณฑ์`:`ไม่พบค่าเกินเกณฑ์มาตรฐานในพารามิเตอร์ที่มีเกณฑ์ทั้ง ${limited.length} รายการ`;
+ const kf=[["จำนวนตัวอย่าง",rows.length.toLocaleString()],["พารามิเตอร์ที่ตรวจวัด",items.length],["พารามิเตอร์ที่มีเกณฑ์",limited.length],["พารามิเตอร์ที่เกินเกณฑ์",badItems.length]];
+ const top=[...badItems].sort((a,b)=>b.s.pct-a.s.pct),totN=limited.reduce((a,x)=>a+x.s.n,0),totE=limited.reduce((a,x)=>a+x.s.ex,0);
+ const obs=[];
+ if(vk=="na")obs.push("ไม่สามารถประเมินเทียบเกณฑ์ได้ ควรเลือกมาตรฐานอื่นหรือกำหนดเกณฑ์เองที่หน้าเลือกมาตรฐาน");
+ else if(!top.length)obs.push("ค่าของทุกพารามิเตอร์ที่มีเกณฑ์อยู่ในเกณฑ์มาตรฐานตลอดช่วงที่ตรวจวัด");
+ else{obs.push(`พบค่าเกินเกณฑ์ใน ${top.map(x=>x.k+" (ร้อยละ "+fmt(x.s.pct,1)+" ของตัวอย่าง)").join(", ")}`);obs.push(`เมื่อรวมทุกพารามิเตอร์ที่มีเกณฑ์ ค่าที่เกินเกณฑ์คิดเป็นร้อยละ ${fmt(totE/totN*100,1)} (${totE.toLocaleString()} จาก ${totN.toLocaleString()} ค่า)`)}
+ if(multi&&R.length&&R[0].pct!=null&&R[0].pct>0)obs.push(`จุดตรวจวัดที่มีสัดส่วนค่าเกินเกณฑ์สูงสุดคือ ${R[0].si} (ร้อยละ ${fmt(R[0].pct,1)})`);
+ const res=(k,s)=>!anyLim(k)?'<span class="rs na">ไม่กำหนดเกณฑ์</span>':s.ex==0?'<span class="rs ok">ผ่านเกณฑ์</span>':'<span class="rs bad">เกินเกณฑ์</span>';
+ const mc=p=>p==null?'<td class="c">–</td>':`<td class="n ${p>=5?"hi":p>0?"mid":""}">${fmt(p,1)}%</td>`;
+ const siteLabel=st.f.site?esc(st.f.site):`ทุกจุดตรวจวัด (${st.sites.length} จุด)`;
+ const stdTxt=used.length>1?used.map(k=>S[k].n).join(" / ")+" (แต่ละจุดใช้มาตรฐานของตัวเอง)":stdLabel();
+ // 1 ข้อมูลทั่วไป
+ const s1=`<h2>1. ข้อมูลทั่วไป</h2><table class="kv"><tbody>
+  <tr><th>แหล่งข้อมูล</th><td>${esc(st.fn||"-")}</td></tr>
+  <tr><th>จุดตรวจวัด</th><td>${siteLabel}</td></tr>
+  <tr><th>ช่วงเวลาที่ตรวจวัด</th><td>${thd(st.f.from)} ถึง ${thd(st.f.to)}</td></tr>
+  <tr><th>จำนวนตัวอย่างที่ใช้ประเมิน</th><td>${rows.length.toLocaleString()} รายการ</td></tr>
+  <tr><th>พารามิเตอร์ที่ตรวจวัด</th><td>${items.map(x=>x.k).join(", ")||"–"}</td></tr>
+  <tr><th>มาตรฐานอ้างอิง</th><td>${esc(stdTxt)}</td></tr></tbody></table>`;
+ // 2 สรุปผล
+ const s2=`<h2>2. สรุปผลการประเมิน</h2><div class="verdict ${vk}"><span class="vl">${vl}</span><span>${vt}</span></div>
+  <div class="kf">${kf.map(([t,v])=>`<div><div class="v">${v}</div><div class="t">${t}</div></div>`).join("")}</div>
+  <p style="margin-top:12px"><b>ข้อสังเกต</b></p><ol>${obs.map(o=>`<li>${o}</li>`).join("")}</ol>`;
+ // 3 รายพารามิเตอร์
+ const t1=cap("ผลเปรียบเทียบค่าที่ตรวจวัดกับเกณฑ์มาตรฐาน จำแนกตามพารามิเตอร์");
+ const s3=`<h2>3. ผลการเปรียบเทียบกับเกณฑ์มาตรฐาน</h2>${t1}<div class="wrap"><table class="dt"><thead><tr><th>พารามิเตอร์</th><th>เกณฑ์มาตรฐาน</th><th>ค่าเฉลี่ย</th><th>ต่ำสุด</th><th>สูงสุด</th><th>จำนวนตัวอย่าง</th><th>เกินเกณฑ์ (ร้อยละ)</th><th>ผลการประเมิน</th></tr></thead><tbody>${items.map(({k,s})=>`<tr><td class="l"><b>${k}</b> ${P[k].n}${P[k].u?" ("+P[k].u+")":""}</td><td class="c">${limTxt(k)}</td><td class="n">${fmt(s.mean,2)}</td><td class="n">${fmt(s.min,2)}</td><td class="n">${fmt(s.max,2)}</td><td class="n">${s.n.toLocaleString()}</td><td class="n">${anyLim(k)?s.ex.toLocaleString()+" ("+fmt(s.pct,1)+")":"–"}</td><td class="c">${res(k,s)}</td></tr>`).join("")}</tbody></table></div>`+
+  (limited.length?`<div class="fig">${figExceed(limited)}<div class="cap"><b>รูปที่ 1</b> สัดส่วนร้อยละของตัวอย่างที่เกินเกณฑ์มาตรฐาน จำแนกตามพารามิเตอร์</div></div>`:"")+
+  (mf.length?`<div class="fig">${figMean(mf)}<div class="cap"><b>รูปที่ 2</b> เปรียบเทียบค่าเฉลี่ยของแต่ละพารามิเตอร์กับเกณฑ์มาตรฐาน</div><div class="mut" style="text-align:center;margin-top:4px">แถบสี = ค่าเฉลี่ย (เขียว = อยู่ในเกณฑ์ แดง = เกินเกณฑ์) · เส้นดำ = ค่าเกณฑ์ · แต่ละพารามิเตอร์ใช้สเกลของตัวเอง${skip.length?" · ไม่แสดง "+skip.join(", ")+" เพราะเกณฑ์ต่างกันตามจุด":""}</div></div>`:"");
+ // 4 รายจุด
+ let s4="",sec=4;
+ if(multi){
+  const a=cap("การจัดอันดับจุดตรวจวัดตามสัดส่วนค่าที่เกินเกณฑ์");
+  const b=cap("ร้อยละของค่าที่เกินเกณฑ์ จำแนกตามจุดตรวจวัดและพารามิเตอร์ (แรเงาแดง = ตั้งแต่ร้อยละ 5 · เหลือง = น้อยกว่าร้อยละ 5 · – = ไม่มีเกณฑ์หรือไม่มีข้อมูล)");
+  s4=`<h2>4. ผลการประเมินจำแนกตามจุดตรวจวัด</h2>${a}<div class="wrap"><table class="dt"><thead><tr><th>อันดับ</th><th>จุดตรวจวัด</th><th>มาตรฐาน</th><th>จำนวนค่าที่มีเกณฑ์</th><th>เกินเกณฑ์ (ครั้ง)</th><th>ร้อยละที่เกิน</th><th>จำนวนวันที่เกิน</th><th>พารามิเตอร์ที่เกิน</th></tr></thead><tbody>${R.map((x,i)=>`<tr><td class="c">${x.pct==null?"–":i+1}</td><td class="l">${esc(x.si)}</td><td class="l">${S[stdOf(x.si)].n}</td><td class="n">${x.n.toLocaleString()}</td><td class="n">${x.pct==null?"–":x.ex.toLocaleString()}</td><td class="n">${x.pct==null?"–":fmt(x.pct,1)}</td><td class="n">${x.pct==null?"–":x.days}</td><td class="l">${x.bad.length?x.bad.map(k=>k+" ("+fmt(x.pr[k].pct,1)+"%)").join(", "):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div>
+  ${b}<div class="wrap"><table class="dt"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr></thead><tbody>${R.map(x=>`<tr><td class="l">${esc(x.si)}</td>${st.avail.map(k=>mc(x.pr[k]?x.pr[k].pct:null)).join("")}</tr>`).join("")}</tbody></table></div>
+  ${cap("ค่าเฉลี่ยของแต่ละพารามิเตอร์ จำแนกตามจุดตรวจวัด (ตัวหนาสีแดง = เกินเกณฑ์)")}<div class="wrap"><table class="dt"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr></thead><tbody>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td class="l">${esc(si)}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td class="n" style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:700":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</tbody></table></div>`;
+  sec=5}
+ // คุณภาพข้อมูล
+ const rm=(cn.dup||0)+(cn.badDate||0)+(cn.empty||0)+(cn.conf||0),cl=(cn.neg||0)+(cn.rng||0)+(cn.txt||0);
+ const sq=`<h2>${sec}. คุณภาพข้อมูลและการเตรียมข้อมูล</h2><table class="kv"><tbody>
+  <tr><th>แถวในไฟล์ต้นฉบับ</th><td>${(rp.total||0).toLocaleString()} แถว (ใช้ต่อหลังคลีน ${(rp.kept||0).toLocaleString()} แถว)</td></tr>
+  <tr><th>แถวที่ถูกลบ</th><td>${rm.toLocaleString()} แถว${rm?` (ซ้ำ ${cn.dup||0} · อ่านวันที่ไม่ได้ ${cn.badDate||0} · ไม่มีค่าที่ใช้ได้ ${cn.empty||0} · จุดและเวลาซ้ำค่าต่างกัน ${cn.conf||0})`:""}</td></tr>
+  <tr><th>ค่าที่ถูกล้างเป็นค่าว่าง</th><td>${cl.toLocaleString()} ค่า${cl?` (ติดลบ ${cn.neg||0} · เป็นไปไม่ได้ทางกายภาพ ${cn.rng||0} · ไม่ใช่ตัวเลข ${cn.txt||0})`:""}</td></tr>
+  <tr><th>ค่าต่ำกว่าขีดจำกัดการตรวจวัด</th><td>${(cn.lod||0).toLocaleString()} ค่า${cn.lod?" · "+(st.lod=="half"?"แทนด้วยครึ่งหนึ่งของขีดจำกัด":st.lod=="zero"?"แทนด้วย 0":"เว้นว่าง"):""}</td></tr>
+  <tr><th>ค่าพุ่งผิดปกติที่ปรับให้ราบเรียบ</th><td>${st.smooth?(cn.spk||0).toLocaleString()+" ค่า (pH, DO, BOD, COD)":"ไม่ได้ใช้การปรับค่า"}</td></tr></tbody></table>`;
+ sec++;
+ // หมายเหตุ + อ้างอิง
+ const notes=["ค่าเกณฑ์ทุกค่าใช้หน่วยตามมาตรฐาน และข้อมูลถูกแปลงหน่วยให้ตรงกันก่อนเทียบ","ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อการคัดกรองเบื้องต้น ต้องตรวจกับประกาศฉบับล่าสุดก่อนใช้เป็นเอกสารทางราชการ","ผลนี้ไม่ใช่ผลวิเคราะห์จากห้องปฏิบัติการที่ได้รับการรับรอง"];
+ if(st.smooth&&cn.spk)notes.push(`ค่าบางค่าถูกปรับให้ราบเรียบ (${cn.spk} ค่า) อาจมีผลต่อการเทียบเกณฑ์ รายละเอียดอยู่ในรายงานการคลีนข้อมูล`);
+ [...new Set(used.map(k=>S[k].note).filter(Boolean))].forEach(n=>notes.push(esc(n)));
+ const sn=`<h2>${sec}. หมายเหตุ</h2><ol>${notes.map(n=>`<li>${n}</li>`).join("")}</ol>`;sec++;
+ const sr=`<h2>${sec}. เอกสารอ้างอิง</h2>`+(usedSrc.length?`<ol>${usedSrc.map(k=>`<li>${esc(SRC[k].t)}<br><span class="mut">${esc(SRC[k].m)}</span></li>`).join("")}</ol>`:'<p>ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีเอกสารอ้างอิงในระบบ</p>');
+ const sign=`<div class="sign-grid"><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้จัดทำรายงาน</div><div class="mut">วันที่ ....../....../......</div></div><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้ตรวจสอบ / อนุมัติ</div><div class="mut">วันที่ ....../....../......</div></div></div>`;
+ const head=`<div class="rpt-letter"><div class="rpt-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><div class="rpt-title">รายงานผลการตรวจวัดคุณภาพน้ำ<br>เทียบเกณฑ์มาตรฐาน</div></div><div class="rpt-meta"><span>เลขที่รายงาน: ${docNo}</span><span>วันที่ออกรายงาน: ${thd(iso)} เวลา ${hm} น.</span></div>`;
+ app.innerHTML=bar()+`<article class="rpt">${head}${s1}${s2}${s3}${s4}${sq}${sn}${sr}${sign}<div class="rpt-foot">จัดทำโดยระบบ AquaCheck · เลขที่รายงาน ${docNo}</div></article>`+
+ '<div class="foot" style="max-width:920px;margin-left:auto;margin-right:auto"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลด Excel (.xlsx)</button></div>';
  bindBar("compliance");$("#pr").onclick=()=>window.print();
- $("#cs").onclick=()=>save("compliance-summary.csv","พารามิเตอร์,ค่าเกณฑ์,เฉลี่ย,ต่ำสุด,สูงสุด,ตัวอย่าง,เกินเกณฑ์,สัดส่วนเกิน(%)\n"+items.map(({k,s})=>[k,csvq(limTxt(k)),fmt(s.mean,2),fmt(s.min,2),fmt(s.max,2),s.n,s.ex,fmt(s.pct,1)].join(",")).join("\n"));
+ $("#cs").onclick=async()=>{const b=$("#cs"),t=b.textContent;b.textContent="กำลังสร้างไฟล์…";b.disabled=true;try{await exportReport(true)}catch(e){await exportReport(false);alert("สร้างไฟล์ .xlsx ไม่ได้ (ต้องต่ออินเทอร์เน็ตเพื่อโหลดไลบรารี) จึงดาวน์โหลดเป็น CSV แทน")}b.textContent=t;b.disabled=false};
 };
+
 const ready=r=>r=="upload"||(r=="map"?!!st.tbl:r=="clean"?!!st.rows:!!(st.rows&&st.rows.length));
 function go(r){if(location.hash.slice(1)==r)render();else location.hash=r}
 function render(){
@@ -452,11 +750,13 @@ function render(){
 }
 const dr=o=>{document.body.classList.toggle("nav",o);$("#mn").setAttribute("aria-expanded",o)};
 $("#mn").onclick=()=>dr(!document.body.classList.contains("nav"));$("#bd").onclick=()=>dr(false);
-document.addEventListener("keydown",e=>{if(e.key=="Escape")dr(false)});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"){dr(false);const m=$("#md");if(m)m.remove()}});
 let lw=innerWidth,rt;addEventListener("resize",()=>{if(innerWidth==lw)return;lw=innerWidth;clearTimeout(rt);rt=setTimeout(()=>{const r=location.hash.slice(1);if(r=="overview"||r=="trends"){try{const y=scrollY;V[r]();scrollTo(0,y)}catch(e){}}},200)});
 document.querySelectorAll("aside a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();if(a.classList.contains("dis"))return;go(a.dataset.r)}));
 window.addEventListener("hashchange",render);
 $("#theme").onclick=()=>{const d=document.documentElement,dark=getComputedStyle(d).getPropertyValue("--bg").trim()=="#0d1a21";d.setAttribute("data-theme",dark?"light":"dark")};
+const fixWraps=()=>{app.querySelectorAll(".card.wrap,.wcard").forEach(c=>{const t=[...c.children].filter(e=>e.tagName=="TABLE");c.classList.remove("wrap");c.classList.add("wcard");t.forEach(tb=>{const d=document.createElement("div");d.className="wrap";tb.replaceWith(d);d.appendChild(tb)})})};
+new MutationObserver(fixWraps).observe(app,{childList:true,subtree:true});
 render();
 </script>
 </body>

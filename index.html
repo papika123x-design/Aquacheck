@@ -284,7 +284,16 @@ aside a{border-radius:10px}
 .cd{max-width:100%}
 .cd-head{margin-bottom:8px}.cd-title{font-size:17pt}.cd-org{font-size:9pt}.cd-docno{font-size:8.5pt}
 .cd-meta{display:grid!important;grid-template-columns:1fr 1fr;padding:6px 10px!important}.cd-meta>div{font-size:9pt;padding:4px 0}.cd-meta b{width:92px}
-.cd-verdict{box-shadow:none;padding:10px 14px;margin:10px 0;gap:12px}.cd-vl{font-size:14pt}.cd-vt{font-size:9.5pt}.cd-vi{width:32px;height:32px;font-size:17px}
+.cd-org{color:#111827!important}
+.cd-verdict{box-shadow:none;padding:10px 14px;margin:10px 0;gap:12px;background:#fff!important;border:1.5px solid #0f172a!important}
+.cd-verdict .cd-vi{background:#f1f5f9!important;color:#0f172a!important;border:1px solid #94a3b8!important}
+.cd-verdict .cd-vl,.cd-kpi .bad .v{color:#0f172a!important}
+.cd-sec>h2{border-bottom:1px solid #cbd5e1;padding-bottom:4px}.cd-sec>h2::before{background:#0f172a!important}
+.cdt tr.x td:first-child{box-shadow:none!important}
+.pill,.pill.ok,.pill.bad,.pill.warn,.pill.na{background:transparent!important;color:#111827!important;border:1px solid #94a3b8!important}
+.pill::before{display:none!important}
+.cdt td[style*="var(--bad)"]{color:#111827!important;text-decoration:underline}
+.cd-fig svg{--ac:#0f8b8d;--bad:#d9542c;--ok:#1f9d63;--ln:#cbd5e1;--mut:#475569}
 .cd-kpi{gap:8px}.cd-kpi>div{box-shadow:none;padding:8px 10px;border:1px solid #cbd5e1}.cd-kpi .v{font-size:15pt}.cd-kpi .t{font-size:8pt}
 .cd-sec{margin-top:14px}.cd-sec>h2{font-size:12.5pt;margin-bottom:8px;break-after:avoid;page-break-after:avoid}
 .cd-verdict,.cd-kpi>div,.cd-sec,.cd-card,.cd-find,.sg,.cd-fig,.cd-foot{break-inside:avoid;page-break-inside:avoid}
@@ -530,23 +539,26 @@ function series(k,rows,day){
  const m={};v.forEach(o=>{const a=m[o.d]||(m[o.d]={s:0,n:0,ex:false,x:Date.parse(o.d+"T00:00:00Z")});a.s+=o[k];a.n++;if(evalP(k,o[k],o.site)===false)a.ex=true});
  return Object.keys(m).sort().map(d=>({x:m[d].x,v:m[d].s/m[d].n,ex:m[d].ex}));
 }
-const fx=(x,sx)=>{const s=new Date(x).toISOString();return sx<3*864e5?s.slice(8,10)+"/"+s.slice(5,7)+" "+s.slice(11,16):s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(2,4)};
+const fx=(x,sx)=>{const s=new Date(x).toISOString();return sx<7*864e5?s.slice(8,10)+"/"+s.slice(5,7)+" "+s.slice(11,16):s.slice(8,10)+"/"+s.slice(5,7)+"/"+s.slice(2,4)};
 const innerW=()=>{const m=getComputedStyle(app);return app.clientWidth-parseFloat(m.paddingLeft)-parseFloat(m.paddingRight)};
 const miniW=()=>{const n=innerWidth>900?3:innerWidth>640?2:1;return Math.max(240,Math.floor((innerW()-16*(n-1))/n)-42)};
 const miniH=()=>Math.max(170,Math.round(miniW()*.5));
 const bigW=()=>Math.max(280,Math.min(1100,innerW()-42));
 const bigH=()=>{const w=bigW();return w<520?270:Math.min(400,Math.round(w*.42))};
 const PAL=["#0f8b8d","#d9542c","#7a5cc7","#e0a100","#1f6fd1","#2e9d5b","#c2437f","#6b7a86","#8c5a2b","#00a3c4"];
+const DASH=["","7 4","2 3","10 4 2 4","12 4","4 3 1 3"];
 const sc=s=>st.sites.length>1?PAL[st.sites.indexOf(s)%PAL.length]:"var(--ac)";
+const sdsh=s=>st.sites.length>1?DASH[st.sites.indexOf(s)%DASH.length]:"";
 function msr(k,rows,day){
  const ss=st.f.site?[st.f.site]:st.sites,tot=rows.reduce((a,o)=>a+(o[k]!=null?1:0),0);
  return ss.map(s=>({site:s,pts:series(k,rows.filter(o=>o.site==s),day||tot>800)})).filter(x=>x.pts.length);
 }
-const legend=sr=>sr.length>1?'<div class="leg">'+sr.map(x=>`<span><i style="background:${sc(x.site)}"></i>${esc(x.site)}</span>`).join("")+'</div>':"";
+const legend=sr=>sr.length>1?'<div class="leg">'+sr.map(x=>{const d=sdsh(x.site);return `<span><svg width="22" height="6" style="vertical-align:middle;margin-right:5px"><line x1="0" y1="3" x2="22" y2="3" stroke="${sc(x.site)}" stroke-width="2.4"${d?` stroke-dasharray="${d}"`:""}/></svg>${esc(x.site)}</span>`}).join("")+'</div>':"";
 const cb=(k,rows,w,h,mini)=>{const sr=msr(k,rows,mini);return chart(sr,k,w,h,mini)+legend(sr)};
 function chart(sr,k,w,h,mini,zm){
  if(!sr.length)return '<div class="mut" style="padding:28px 0">ไม่มีข้อมูลของพารามิเตอร์นี้ในช่วงที่เลือก</div>';
- const g=mini?{l:50,r:8,t:8,b:40}:{l:64,r:14,t:12,b:44},ny=mini?3:4,nx=mini||w<520?2:3;
+ const zf=zm?1/Math.max(.01,zm.b-zm.a):1;
+ const g=mini?{l:50,r:8,t:8,b:40}:{l:64,r:14,t:12,b:44},ny=mini?3:4,nx=mini?2:Math.min(w<520?5:10,Math.max(w<520?2:3,Math.round((w<520?2:3)*Math.sqrt(zf))));
  let lo=Infinity,hi=-Infinity,x0=Infinity,x1=-Infinity;
  sr.forEach(z=>{z.pts.forEach(p=>{if(p.v<lo)lo=p.v;if(p.v>hi)hi=p.v});if(z.pts[0].x<x0)x0=z.pts[0].x;const e=z.pts[z.pts.length-1].x;if(e>x1)x1=e});
  const ls=sr.map(z=>({z,l:lim(k,z.site)})),uni=new Set(ls.map(x=>JSON.stringify(x.l))).size==1;
@@ -557,13 +569,13 @@ function chart(sr,k,w,h,mini,zm){
  let s=`<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="กราฟ ${k}">`;
  if(zm)s+=`<defs><clipPath id="czc"><rect x="${g.l}" y="${g.t}" width="${w-g.l-g.r}" height="${h-g.t-g.b}"/></clipPath></defs>`;
  for(let i=0;i<=ny;i++){const v=lo+(hi-lo)*i/ny,y=Y(v);s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${y}" y2="${y}" stroke="var(--ln)"/><text x="${g.l-6}" y="${y+4}" text-anchor="end">${fmt(v,hi-lo<10?2:0)}</text>`}
- for(let i=0;i<=nx;i++){const x=x0+sx*i/nx;s+=`<text x="${X(x)}" y="${h-g.b+16}" text-anchor="${i==0?"start":i==nx?"end":"middle"}">${fx(x,sx)}</text>`}
+ for(let i=0;i<=nx;i++){const x=x0+sx*i/nx,tx=X(x);if(!mini&&i>0&&i<nx)s+=`<line x1="${tx}" x2="${tx}" y1="${g.t}" y2="${h-g.b}" stroke="var(--ln)" stroke-dasharray="2 3" opacity=".65"/>`;s+=`<text x="${tx}" y="${h-g.b+16}" text-anchor="${i==0?"start":i==nx?"end":"middle"}">${fx(x,sx)}</text>`}
  s+=`<line x1="${g.l}" x2="${g.l}" y1="${g.t}" y2="${h-g.b}" stroke="var(--mut)"/><line x1="${g.l}" x2="${w-g.r}" y1="${h-g.b}" y2="${h-g.b}" stroke="var(--mut)"/>`;
  s+=`<text x="${(g.l+w-g.r)/2}" y="${h-5}" text-anchor="middle" style="font-weight:600">วันที่</text><text transform="rotate(-90)" x="${-(g.t+h-g.b)/2}" y="13" text-anchor="middle" style="font-weight:600">${k}${P[k].u?" ("+P[k].u+")":""}</text>`;
  if(zm)s+='<g clip-path="url(#czc)">';
  (uni?ls.slice(0,1):ls).forEach(x=>{if(x.l)x.l.forEach(v=>{if(v!=null)s+=`<line x1="${g.l}" x2="${w-g.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${uni?"var(--bad)":sc(x.z.site)}" stroke-dasharray="${uni?"6 4":"2 4"}" stroke-width="${uni?1.4:1.2}"/>`})});
- sr.forEach(z=>{const c=sc(z.site);
-  s+=`<polyline fill="none" stroke="${c}" stroke-width="${mini?1.5:1.8}" stroke-linejoin="round" points="${z.pts.map(p=>X(p.x).toFixed(1)+","+Y(p.v).toFixed(1)).join(" ")}"/>`;
+ sr.forEach(z=>{const c=sc(z.site),dsh=sdsh(z.site);
+  s+=`<polyline fill="none" stroke="${c}" stroke-width="${mini?1.5:1.9}"${dsh?` stroke-dasharray="${dsh}"`:""} stroke-linejoin="round" points="${z.pts.map(p=>X(p.x).toFixed(1)+","+Y(p.v).toFixed(1)).join(" ")}"/>`;
   if(z.pts.length==1)s+=`<circle cx="${X(z.pts[0].x).toFixed(1)}" cy="${Y(z.pts[0].v).toFixed(1)}" r="3" fill="${c}"/>`;
   if(!mini)z.pts.forEach(p=>{if(p.ex)s+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="3.4" fill="var(--bad)"><title>${esc(z.site)} ${fx(p.x,0)}: ${fmt(p.v,2)}</title></circle>`})});
  if(zm)s+="</g>";
@@ -697,7 +709,7 @@ V.trends=()=>{
  bindBar("trends");$("#bkov").onclick=()=>go("overview");
  {const sr=msr(k,rows,false),cz=$("#cz"),pts=new Map();let zm={a:0,b:1},raf=0,pd=0;
   const span=()=>{let a=Infinity,b=-Infinity;sr.forEach(z=>{if(z.pts[0].x<a)a=z.pts[0].x;const e=z.pts[z.pts.length-1].x;if(e>b)b=e});return (b-a)||1};
-  const minF=Math.max(.005,Math.min(1,432e5/span()));
+  const minF=Math.max(.001,Math.min(1,36e5/span()));
   const zdraw=()=>{cz.innerHTML=chart(sr,k,bigW(),bigH(),false,zm)+legend(sr);const on=zm.b-zm.a<.999;$("#zr").disabled=!on;$("#zo").disabled=!on;$("#zi").disabled=zm.b-zm.a<=minF*1.001};
   const clampZ=()=>{const s=Math.min(1,Math.max(minF,zm.b-zm.a));if(zm.a<0)zm.a=0;zm.b=zm.a+s;if(zm.b>1){zm.b=1;zm.a=1-s}};
   const zat=(u,f)=>{const s=zm.b-zm.a,ns=Math.min(1,Math.max(minF,s*f)),c=zm.a+u*s;zm.a=c-u*ns;zm.b=zm.a+ns;clampZ()};
@@ -853,8 +865,7 @@ V.compliance=()=>{
   const sb=x=>x.pct==null?'<span class="pill na">ไม่มีเกณฑ์</span>':x.pct>0?'<span class="pill bad">เกินเกณฑ์</span>':'<span class="pill ok">ผ่านเกณฑ์</span>';
   const hc=p=>p==null?'<td class="hn">–</td>':`<td class="${p>=5?"h2":p>0?"h1":"h0"}">${fmt(p,1)}%</td>`;
   s5=`<section class="cd-sec cd-keep"><h2>วิเคราะห์เปรียบเทียบรายจุดตรวจวัด</h2>
-  <div class="card"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (ทุกสถานีในช่วงวันที่ที่เลือก)</span><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>อันดับ</th><th>จุดตรวจวัด</th><th>สถานะ</th><th>มาตรฐาน</th><th class="n">ค่าที่มีเกณฑ์</th><th class="n">เกินเกณฑ์</th><th>สัดส่วนที่เกิน</th><th class="n">วันที่เกิน</th><th>พารามิเตอร์ที่เกิน</th></tr></thead><tbody>${R.map((x,i)=>`<tr class="${i==0&&x.pct>0?"x":""}"><td>${x.pct==null?"–":i+1}</td><td class="w">${dot(x.si)}<b>${esc(x.si)}</b>${i==0&&x.pct>0?' <span class="pill bad">วิกฤตที่สุด</span>':""}</td><td>${sb(x)}</td><td class="w">${S[stdOf(x.si)].n}</td><td class="n">${x.n.toLocaleString()}</td><td class="n">${x.pct==null?"–":x.ex.toLocaleString()}</td><td>${x.pct==null?"–":`<div class="pb"><div><i style="width:${Math.min(100,x.pct)}%;background:${x.pct>=5?"var(--bad)":x.pct>0?"var(--warn)":"var(--ok)"}"></i></div><span>${fmt(x.pct,1)}%</span></div>`}</td><td class="n">${x.pct==null?"–":x.days}</td><td class="w">${x.bad.length?x.bad.map(k=>`<span class="pill bad" style="margin:2px 4px 2px 0">${k} ${fmt(x.pr[k].pct,1)}%</span>`).join(""):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div></div>
-  <div class="card" style="margin-top:16px"><b>แผนที่ความร้อน สถานี × พารามิเตอร์</b> <span class="mut">ร้อยละของค่าที่เกินเกณฑ์</span><div class="tw" style="margin-top:8px"><table class="hm"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr></thead><tbody>${R.map(x=>`<tr><td>${dot(x.si)}${esc(x.si)}</td>${st.avail.map(k=>hc(x.pr[k]?x.pr[k].pct:null)).join("")}</tr>`).join("")}</tbody></table></div><div class="cd-legend"><span class="pill ok">0%</span> <span class="pill warn">&lt; 5%</span> <span class="pill bad">≥ 5%</span> <span class="pill nd">– ไม่มีเกณฑ์/ไม่มีข้อมูล</span></div></div>
+  <div class="card"><b>จัดอันดับสถานี</b> <span class="mut">เรียงตามสัดส่วนค่าที่เกินเกณฑ์ (ทุกสถานีในช่วงวันที่ที่เลือก)</span><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>อันดับ</th><th>จุดตรวจวัด</th><th>สถานะ</th><th>มาตรฐาน</th><th class="n">ค่าที่มีเกณฑ์</th><th class="n">เกินเกณฑ์</th><th class="n">สัดส่วนที่เกิน</th><th class="n">วันที่เกิน</th><th>พารามิเตอร์ที่เกิน</th></tr></thead><tbody>${R.map((x,i)=>`<tr class="${i==0&&x.pct>0?"x":""}"><td>${x.pct==null?"–":i+1}</td><td class="w">${dot(x.si)}<b>${esc(x.si)}</b>${i==0&&x.pct>0?' <span class="pill bad">วิกฤตที่สุด</span>':""}</td><td>${sb(x)}</td><td class="w">${S[stdOf(x.si)].n}</td><td class="n">${x.n.toLocaleString()}</td><td class="n">${x.pct==null?"–":x.ex.toLocaleString()}</td><td class="n">${x.pct==null?"–":`<b>${fmt(x.pct,1)}%</b>`}</td><td class="n">${x.pct==null?"–":x.days}</td><td class="w">${x.bad.length?x.bad.map(k=>`<span class="pill bad" style="margin:2px 4px 2px 0">${k} ${fmt(x.pr[k].pct,1)}%</span>`).join(""):(x.pct==null?"–":"ไม่มี")}</td></tr>`).join("")}</tbody></table></div></div>
   <div class="card" style="margin-top:16px"><b>ค่าเฉลี่ยแยกตามจุดตรวจวัด</b> <span class="mut">ตัวหนาสีแดง = เกินเกณฑ์</span><div class="tw" style="margin-top:8px"><table class="cdt"><thead><tr><th>จุดตรวจวัด</th>${st.avail.map(k=>`<th class="n">${k}</th>`).join("")}</tr></thead><tbody>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td class="w">${esc(si)}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td class="n" style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:700":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</tbody></table></div></div></section>`;
  }
  // --- metadata cards + sign-off

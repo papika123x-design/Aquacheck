@@ -64,10 +64,6 @@ html{-webkit-text-size-adjust:100%}
 #tb,#bd{display:none}
 .wrap td:first-child,.wrap th:first-child{position:sticky;left:0;background:var(--sf);z-index:1;box-shadow:1px 0 0 var(--ln)}
 .wrap{-webkit-overflow-scrolling:touch}
-
-/* ส่วนหัวและท้ายรายงานสำหรับพิมพ์ PDF (ซ่อนบนหน้าจอปกติ) */
-.print-only{display:none}
-
 @media(max-width:1023px){
 body{flex-direction:column;font-size:16px}
 #tb{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;background:var(--side);color:#fff;padding:8px 14px}
@@ -93,171 +89,37 @@ main{padding:14px 12px 40px}
 .foot button{flex:1 1 auto}
 }
 
-/* =========================================================
-   กฎสำหรับการพิมพ์และบันทึกเป็นเอกสาร PDF แบบทางการ (@media print)
-   ========================================================= */
-@page {
-  size: A4 portrait;
-  margin: 14mm 14mm 16mm 14mm;
-}
-@media print {
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  body {
-    display: block !important;
-    background: #ffffff !important;
-    color: #111827 !important;
-    font-size: 11pt !important;
-    line-height: 1.4 !important;
-  }
-  /* ซ่อนองค์ประกอบของหน้าเว็บที่ไม่ใช่เอกสาร */
-  aside, #tb, #bd, .filters, .foot, .no-print {
-    display: none !important;
-  }
-  main {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  /* แสดงส่วนหัวและท้ายเอกสารทางการ */
-  .print-only {
-    display: block !important;
-  }
-  .doc-header {
-    border-bottom: 2px solid #0f172a;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-  }
-  .doc-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .doc-org {
-    font-size: 10pt;
-    font-weight: 600;
-    color: #0f8b8d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .doc-title {
-    font-size: 16pt;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 2px 0 4px 0;
-  }
-  .doc-meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px 20px;
-    margin-top: 10px;
-    padding: 10px 12px;
-    background: #f8fafc !important;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 9.5pt;
-  }
-  .doc-meta-grid div b {
-    color: #334155;
-  }
-  .doc-summary-boxes {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .doc-box {
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background: #ffffff !important;
-  }
-  .doc-box-lbl {
-    font-size: 8.5pt;
-    color: #475569;
-  }
-  .doc-box-val {
-    font-size: 13pt;
-    font-weight: 700;
-    color: #0f172a;
-  }
-  /* ปรับแต่งการ์ดและตารางให้พอดีหน้ากระดาษ A4 ไม่ตัดขอบ */
-  .card {
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 6px !important;
-    padding: 12px 14px !important;
-    margin-bottom: 14px !important;
-    box-shadow: none !important;
-    break-inside: avoid;
-  }
-  .wrap {
-    overflow: visible !important;
-  }
-  .wrap td:first-child, .wrap th:first-child {
-    position: static !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    font-size: 8.5pt !important;
-    table-layout: auto !important;
-  }
-  th, td {
-    white-space: normal !important;
-    word-break: break-word !important;
-    padding: 5px 6px !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #111827 !important;
-  }
-  th {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-    font-weight: 700 !important;
-  }
-  .mut {
-    color: #475569 !important;
-    font-size: 8pt !important;
-  }
-  .pill {
-    border: 1px solid #cbd5e1;
-    padding: 1px 6px !important;
-    font-size: 7.5pt !important;
-  }
-  .pill.ok { background: #dcfce7 !important; color: #166534 !important; border-color: #86efac; }
-  .pill.bad { background: #fee2e2 !important; color: #991b1b !important; border-color: #fca5a5; }
-  .pill.warn { background: #fef3c7 !important; color: #92400e !important; border-color: #fcd34d; }
-  
-  /* ส่วนลงนามท้ายรายงาน */
-  .doc-footer {
-    margin-top: 24px;
-    break-inside: avoid;
-  }
-  .doc-note {
-    font-size: 8.5pt;
-    color: #475569;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 8px;
-    margin-bottom: 24px;
-  }
-  .sign-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    text-align: center;
-    font-size: 9.5pt;
-  }
-  .sign-line {
-    border-bottom: 1px dotted #475569;
-    height: 36px;
-    margin: 0 auto 6px auto;
-    width: 75%;
-  }
+/* ===== พิมพ์ / บันทึก PDF (A4) ===== */
+.print-only{display:none}
+@page{size:A4 portrait;margin:14mm 14mm 16mm 14mm}
+@media print{
+:root:root:root{--bg:#fff;--sf:#fff;--ink:#111827;--mut:#475569;--ln:#cbd5e1;--ac:#0f8b8d;--ok:#166534;--bad:#991b1b;--warn:#92400e;--okbg:#dcfce7;--badbg:#fee2e2;--wbg:#fef3c7}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+body{display:block!important;background:#fff!important;color:#111827!important;font-size:11pt!important;line-height:1.4!important}
+aside,#tb,#bd,.filters,.foot,.no-print{display:none!important}
+main{max-width:100%!important;width:100%!important;padding:0!important;margin:0!important}
+.print-only{display:block!important}
+.doc-summary-boxes.print-only{display:grid!important;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.doc-header{border-bottom:2px solid #0f172a;padding-bottom:12px;margin-bottom:16px}
+.doc-title-row{display:flex;justify-content:space-between;align-items:flex-start}
+.doc-org{font-size:10pt;font-weight:600;color:#0f8b8d}
+.doc-title{font-size:16pt;font-weight:700;color:#0f172a;margin:2px 0 4px}
+.doc-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;margin-top:10px;padding:10px 12px;background:#f8fafc!important;border:1px solid #cbd5e1;border-radius:6px;font-size:9.5pt}
+.doc-box{border:1px solid #cbd5e1;border-radius:6px;padding:8px 12px;background:#fff!important}
+.doc-box-lbl{font-size:8.5pt;color:#475569}.doc-box-val{font-size:13pt;font-weight:700;color:#0f172a}
+.card{background:#fff!important;border:1px solid #cbd5e1!important;border-radius:6px!important;padding:12px 14px!important;margin-bottom:14px!important;box-shadow:none!important}
+.wrap{overflow:visible!important}
+.wrap td:first-child,.wrap th:first-child{position:static!important;background:transparent!important;box-shadow:none!important}
+table{width:100%!important;border-collapse:collapse!important;font-size:8.5pt!important}
+tr{break-inside:avoid}
+th,td{white-space:normal!important;word-break:break-word!important;padding:5px 6px!important;border:1px solid #cbd5e1!important;color:#111827!important}
+th{background:#f1f5f9!important;color:#0f172a!important;font-weight:700!important}
+.mut{color:#475569!important;font-size:8pt!important}
+.pill{border:1px solid #cbd5e1;padding:1px 6px!important;font-size:7.5pt!important}
+.doc-footer{margin-top:24px;break-inside:avoid}
+.doc-note{font-size:8.5pt;color:#475569;border-top:1px solid #e2e8f0;padding-top:8px;margin-bottom:24px}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;font-size:9.5pt}
+.sign-line{border-bottom:1px dotted #475569;height:36px;margin:0 auto 6px;width:75%}
 }
 </style>
 </head>
@@ -299,7 +161,9 @@ EC:[["µS/cm",lin(1),/[µμu]s\/cm/i],["mS/cm",lin(1000),/(^|[^µμu])ms\/cm/i],
 Sal:[["g/L (หรือ ppt, PSU)",lin(1),/(^|[^mµμu])g\/l|ppt|psu|‰/i],["mg/L (หรือ ppm)",lin(.001),/mg\/l|ppm/i],["%",lin(10),/%/]],
 Temp:[["°C",v=>v,/°c|celsius|\(c\)/i],["°F",v=>(v-32)*5/9,/°f|fahrenheit|\(f\)/i],["K",v=>v-273.15,/\(k\)|kelvin/i]]};
 ["DO","TSS","TDS","BOD","COD","Oil","TKN"].forEach(k=>UN[k]=[["mg/L (หรือ ppm)",lin(1),/mg\/l|ppm/i],["g/L",lin(1000),/(^|[^mµμu])g\/l/i],["µg/L (หรือ ppb)",lin(.001),/[µμu]g\/l|ppb/i]]);
+// ช่วงค่าที่เป็นไปได้ทางกายภาพ (ค่านอกช่วงถือว่าผิดพลาด)
 const RNG={pH:[0,14],DO:[0,20],EC:[0,200000],Sal:[0,100],Temp:[-2,70],Turb:[0,5000],BOD:[0,20000],COD:[0,100000],TSS:[0,50000],TDS:[0,200000],Oil:[0,10000],TKN:[0,5000]};
+// ค่าเกณฑ์ [ต่ำสุด, สูงสุด] เป็นตัวอย่างสาธิต ตรวจกับประกาศล่าสุดก่อนใช้จริง
 const S={
 ind:{n:"น้ำทิ้งโรงงานอุตสาหกรรม (ไทย)",d:"เกณฑ์ระบายน้ำทิ้งจากโรงงาน",note:"อ้างอิงประกาศกระทรวงอุตสาหกรรม พ.ศ. 2560 (ค่ามาตรฐานทั่วไป ไม่รวมกรณีผ่อนผัน)",L:{pH:[5.5,9],Temp:[null,40],BOD:[null,20],COD:[null,120],TSS:[null,50],TDS:[null,3000],Oil:[null,5],TKN:[null,100]}},
 bld:{n:"น้ำทิ้งจากอาคาร (ไทย)",d:"อาคารที่ต้องบำบัดน้ำเสียก่อนระบาย (ใช้เกณฑ์อาคารประเภท ก ซึ่งเข้มที่สุด)",note:"TDS 500 mg/L คือค่าที่เพิ่มขึ้นจากน้ำใช้ตั้งต้น อาคารประเภทอื่น (ข–จ) มีเกณฑ์ BOD, TSS, TKN ที่ผ่อนกว่านี้",L:{pH:[5,9],BOD:[null,20],TSS:[null,30],TDS:[null,500],Oil:[null,20],TKN:[null,35]}},
@@ -537,8 +401,8 @@ V.overview=()=>{
 };
 V.trends=()=>{
  const rows=view(),k=st.pm,s=stats(k,rows),a=alerts(k,rows),multi=st.sites.length>1&&!st.f.site;
- app.innerHTML='<button class="ghost no-print" id="bkov" style="margin-bottom:12px">← กลับไปภาพรวม</button>'+title("รายละเอียดและแจ้งเตือน","เลือกพารามิเตอร์และช่วงวันที่ เส้นประสีแดงคือค่าเกณฑ์ จุดแดงคือช่วงที่เกินเกณฑ์")+bar()+
- '<div class="tabs no-print" id="pt">'+st.avail.map(x=>{const n=alerts(x,rows).length;return `<button data-k="${x}" class="${x==k?"on":""}">${x}${n?`<b>●</b>`:""}</button>`}).join("")+'</div>'+
+ app.innerHTML='<button class="ghost" id="bkov" style="margin-bottom:12px">← กลับไปภาพรวม</button>'+title("รายละเอียดและแจ้งเตือน","เลือกพารามิเตอร์และช่วงวันที่ เส้นประสีแดงคือค่าเกณฑ์ จุดแดงคือช่วงที่เกินเกณฑ์")+bar()+
+ '<div class="tabs" id="pt">'+st.avail.map(x=>{const n=alerts(x,rows).length;return `<button data-k="${x}" class="${x==k?"on":""}">${x}${n?`<b>●</b>`:""}</button>`}).join("")+'</div>'+
  `<div class="card"><b>${k} ${P[k].n}</b> <span class="mut">${P[k].u} ${rows.filter(o=>o[k]!=null).length>800?"· แสดงค่าเฉลี่ยรายวัน":""}</span>${cb(k,rows,bigW(),bigH(),false)}</div>`+
  (s?`<div class="row c4" style="margin-top:16px"><div class="card"><div class="mut">ค่าเฉลี่ย</div><div class="big">${fmt(s.mean,2)}</div></div><div class="card"><div class="mut">ต่ำสุด</div><div class="big">${fmt(s.min,2)}</div></div><div class="card"><div class="mut">สูงสุด</div><div class="big">${fmt(s.max,2)}</div></div><div class="card"><div class="mut">ค่าเกณฑ์ (หน่วยตามมาตรฐาน)</div><div class="big" style="font-size:22px">${limTxt(k)}</div></div></div>`:"")+
  (!anyLim(k)?`<div class="alert"><b>มาตรฐานนี้ไม่มีเกณฑ์ของ ${k}</b><div>เลือกมาตรฐานอื่น หรือกำหนดเกณฑ์เองที่หน้าเลือกมาตรฐาน</div></div>`:
@@ -560,72 +424,19 @@ function rankHtml(){
 }
 V.compliance=()=>{
  const rows=view(),items=st.avail.map(k=>({k,s:stats(k,rows)})).filter(x=>x.s);
- const badItems=items.filter(x=>anyLim(x.k)&&x.s.ex>0);
- const now=new Date(),printDate=pad(now.getDate())+"/"+pad(now.getMonth()+1)+"/"+now.getFullYear()+" เวลา "+pad(now.getHours())+":"+pad(now.getMinutes())+" น.";
- const siteLabel=st.f.site?esc(st.f.site):`ทุกจุดตรวจวัด (${st.sites.length} สถานี)`;
-
- // ส่วนหัวเอกสารทางการ (แสดงเฉพาะตอนสั่งพิมพ์ / บันทึกเป็น PDF)
- const printHeader=`
- <div class="print-only doc-header">
-   <div class="doc-title-row">
-     <div>
-       <div class="doc-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div>
-       <div class="doc-title">รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน</div>
-     </div>
-     <div style="text-align:right;font-size:9pt;color:#475569">
-       <div><b>วันที่ออกรายงาน:</b> ${printDate}</div>
-       <div><b>แหล่งข้อมูล:</b> ${esc(st.fn||"-")}</div>
-     </div>
-   </div>
-   <div class="doc-meta-grid">
-     <div><b>มาตรฐานอ้างอิง:</b> ${esc(stdLabel())}</div>
-     <div><b>จุดตรวจวัด / สถานี:</b> ${siteLabel}</div>
-     <div><b>ช่วงวันที่ตรวจวัด:</b> ${dmy(st.f.from)} ถึง ${dmy(st.f.to)}</div>
-     <div><b>จำนวนข้อมูลที่นำมาวิเคราะห์:</b> ${rows.length.toLocaleString()} รายการ</div>
-   </div>
- </div>
- <div class="print-only doc-summary-boxes">
-   <div class="doc-box">
-     <div class="doc-box-lbl">จำนวนตัวอย่างทั้งหมด</div>
-     <div class="doc-box-val">${rows.length.toLocaleString()} <span style="font-size:9.5pt;font-weight:400">รายการ</span></div>
-   </div>
-   <div class="doc-box">
-     <div class="doc-box-lbl">พารามิเตอร์ที่ตรวจวัด</div>
-     <div class="doc-box-val">${items.length} <span style="font-size:9.5pt;font-weight:400">พารามิเตอร์</span></div>
-   </div>
-   <div class="doc-box">
-     <div class="doc-box-lbl">สรุปผลการประเมินเกณฑ์</div>
-     <div class="doc-box-val" style="color:${badItems.length?"#991b1b":"#166534"}">${badItems.length?`เกินเกณฑ์ ${badItems.length} รายการ`:"ผ่านเกณฑ์มาตรฐานทั้งหมด"}</div>
-   </div>
- </div>`;
-
- // ส่วนท้ายเอกสารและช่องลงนาม (แสดงเฉพาะตอนสั่งพิมพ์ / บันทึกเป็น PDF)
- const printFooter=`
- <div class="print-only doc-footer">
-   <div class="doc-note">
-     <b>หมายเหตุ:</b> ค่าเกณฑ์มาตรฐานและผลลัพธ์ทั้งหมดถูกแปลงหน่วยให้อยู่ในมาตรฐานเดียวกันก่อนทำการประเมินผล ${S[st.std].note?("· "+esc(S[st.std].note)):""}
-   </div>
-   <div class="sign-grid">
-     <div>
-       <div class="sign-line"></div>
-       <div>( ........................................................................ )</div>
-       <div style="font-weight:600;margin-top:2px">ผู้จัดทำรายงาน / ผู้ตรวจสอบข้อมูล</div>
-       <div style="font-size:8.5pt;color:#475569">วันที่ ........ / ................ / ............</div>
-     </div>
-     <div>
-       <div class="sign-line"></div>
-       <div>( ........................................................................ )</div>
-       <div style="font-weight:600;margin-top:2px">ผู้อนุมัติ / หัวหน้าหน่วยงาน</div>
-       <div style="font-size:8.5pt;color:#475569">วันที่ ........ / ................ / ............</div>
-     </div>
-   </div>
- </div>`;
-
- app.innerHTML=printHeader+title("ผลเทียบมาตรฐาน","จำนวนครั้งที่ค่าเกินเกณฑ์ของ "+stdLabel()+" · ค่าเกณฑ์ใช้หน่วยตามมาตรฐาน")+bar()+
- `<div class="card wrap"><b class="print-only" style="margin-bottom:6px;font-size:10.5pt">ตารางที่ 1 สรุปผลการเปรียบเทียบค่าพารามิเตอร์กับเกณฑ์มาตรฐาน</b><table><tr><th>พารามิเตอร์</th><th>ค่าเกณฑ์ (หน่วยตามมาตรฐาน)</th><th>เฉลี่ย</th><th>ต่ำสุด</th><th>สูงสุด</th><th>ตัวอย่าง</th><th>เกินเกณฑ์</th><th class="no-print" style="width:140px">สัดส่วน</th><th>สถานะ</th></tr>${items.map(({k,s})=>`<tr><td><b>${k}</b> <span class="mut">${P[k].n}</span></td><td>${limTxt(k)}</td><td>${fmt(s.mean,2)}</td><td>${fmt(s.min,2)}</td><td>${fmt(s.max,2)}</td><td>${s.n.toLocaleString()}</td><td>${anyLim(k)?`${s.ex.toLocaleString()} (${fmt(s.pct,1)}%)`:"–"}</td><td class="no-print"><div class="bar"><i style="width:${Math.min(100,s.pct)}%;background:${s.pct>=5?"var(--bad)":"var(--warn)"}"></i></div></td><td>${pill(k,s)}</td></tr>`).join("")}</table></div>`+(st.sites.length>1?rankHtml():"")+
- (st.sites.length>1?`<div class="card wrap" style="margin-top:16px"><b>ค่าเฉลี่ยแยกตามจุดเก็บ</b> <span class="mut">สีแดงคือเกินเกณฑ์</span><table style="margin-top:8px"><tr><th>จุดเก็บ</th><th>มาตรฐาน</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td>${esc(si)}</td><td>${S[stdOf(si)].n}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:600":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</table></div>`:"")+
- printFooter+
- '<div class="foot"><button id="pr">พิมพ์ / บันทึกเป็น PDF (ฉบับทางการ)</button><button class="ghost" id="cs">ดาวน์โหลดสรุป (CSV)</button></div>';
+ const limited=items.filter(x=>anyLim(x.k)),badItems=limited.filter(x=>x.s.ex>0);
+ const now=new Date(),pDate=pad(now.getDate())+"/"+pad(now.getMonth()+1)+"/"+now.getFullYear()+" เวลา "+pad(now.getHours())+":"+pad(now.getMinutes())+" น.";
+ const siteLabel=st.f.site?esc(st.f.site):`ทุกจุดตรวจวัด (${st.sites.length} สถานี)`,rp=st.rep;
+ const verdict=!limited.length?["ไม่มีเกณฑ์ให้เทียบ","#475569"]:badItems.length?[`เกินเกณฑ์ ${badItems.length} พารามิเตอร์`,"#991b1b"]:["ไม่พบค่าเกินเกณฑ์","#166534"];
+ const head=`<div class="print-only doc-header"><div class="doc-title-row"><div><div class="doc-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><div class="doc-title">รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน</div></div><div style="text-align:right;font-size:9pt;color:#475569"><div><b>วันที่ออกรายงาน:</b> ${pDate}</div><div><b>แหล่งข้อมูล:</b> ${esc(st.fn||"-")}</div></div></div>
+ <div class="doc-meta-grid"><div><b>มาตรฐานอ้างอิง:</b> ${esc(stdLabel())}</div><div><b>จุดตรวจวัด:</b> ${siteLabel}</div><div><b>ช่วงวันที่:</b> ${dmy(st.f.from)} ถึง ${dmy(st.f.to)}</div><div><b>ข้อมูลที่ใช้วิเคราะห์:</b> ${rows.length.toLocaleString()} รายการ</div><div><b>ข้อมูลดิบในไฟล์:</b> ${rp.total.toLocaleString()} แถว (ตัดแถวซ้ำ ${rp.dup.toLocaleString()} · วันที่อ่านไม่ได้/ไม่มีค่า ${(rp.badDate+rp.empty).toLocaleString()})</div></div></div>
+ <div class="print-only doc-summary-boxes"><div class="doc-box"><div class="doc-box-lbl">จำนวนตัวอย่าง</div><div class="doc-box-val">${rows.length.toLocaleString()}</div></div><div class="doc-box"><div class="doc-box-lbl">พารามิเตอร์ที่ตรวจวัด</div><div class="doc-box-val">${items.length}</div></div><div class="doc-box"><div class="doc-box-lbl">สรุปผลเทียบเกณฑ์</div><div class="doc-box-val" style="color:${verdict[1]}">${verdict[0]}</div></div></div>`;
+ const foot=`<div class="print-only doc-footer"><div class="doc-note"><b>หมายเหตุ:</b> ค่าเกณฑ์ทุกค่าใช้หน่วยตามมาตรฐาน และข้อมูลถูกแปลงหน่วยให้ตรงกันก่อนเทียบ ${S[st.std].note?"· "+esc(S[st.std].note)+" ":""}· ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อการคัดกรองเบื้องต้น ต้องตรวจกับประกาศฉบับล่าสุดก่อนใช้เป็นเอกสารทางราชการ และผลนี้ไม่ใช่ผลวิเคราะห์จากห้องปฏิบัติการที่ได้รับการรับรอง</div>
+ <div class="sign-grid"><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้จัดทำรายงาน</div><div style="font-size:8.5pt;color:#475569">วันที่ ....../....../......</div></div><div><div class="sign-line"></div><div>( ................................................ )</div><div style="font-weight:600;margin-top:2px">ผู้ตรวจสอบ / อนุมัติ</div><div style="font-size:8.5pt;color:#475569">วันที่ ....../....../......</div></div></div></div>`;
+ app.innerHTML=head+title("ผลเทียบมาตรฐาน","จำนวนครั้งที่ค่าเกินเกณฑ์ของ "+stdLabel()+" · ค่าเกณฑ์ใช้หน่วยตามมาตรฐาน")+bar()+
+ `<div class="card wrap"><b class="print-only" style="margin-bottom:6px">ตารางที่ 1 สรุปผลเทียบค่าพารามิเตอร์กับเกณฑ์มาตรฐาน</b><table><tr><th>พารามิเตอร์</th><th>ค่าเกณฑ์ (หน่วยตามมาตรฐาน)</th><th>เฉลี่ย</th><th>ต่ำสุด</th><th>สูงสุด</th><th>ตัวอย่าง</th><th>เกินเกณฑ์</th><th class="no-print" style="width:140px">สัดส่วน</th><th>สถานะ</th></tr>${items.map(({k,s})=>`<tr><td><b>${k}</b> <span class="mut">${P[k].n}</span></td><td>${limTxt(k)}</td><td>${fmt(s.mean,2)}</td><td>${fmt(s.min,2)}</td><td>${fmt(s.max,2)}</td><td>${s.n.toLocaleString()}</td><td>${anyLim(k)?`${s.ex.toLocaleString()} (${fmt(s.pct,1)}%)`:"–"}</td><td class="no-print"><div class="bar"><i style="width:${Math.min(100,s.pct)}%;background:${s.pct>=5?"var(--bad)":"var(--warn)"}"></i></div></td><td>${pill(k,s)}</td></tr>`).join("")}</table></div>`+(st.sites.length>1?rankHtml():"")+
+ (st.sites.length>1?`<div class="card wrap" style="margin-top:16px"><b>ค่าเฉลี่ยแยกตามจุดเก็บ</b> <span class="mut">สีแดงคือเกินเกณฑ์</span><table style="margin-top:8px"><tr><th>จุดเก็บ</th><th>มาตรฐาน</th>${st.avail.map(k=>`<th>${k}</th>`).join("")}</tr>${st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return `<tr><td>${esc(si)}</td><td>${S[stdOf(si)].n}</td>${st.avail.map(k=>{const t=stats(k,rs);return `<td style="${t&&evalP(k,t.mean,si)===false?"color:var(--bad);font-weight:600":""}">${t?fmt(t.mean,2):"–"}</td>`}).join("")}</tr>`}).join("")}</table></div>`:"")+foot+
+ '<div class="foot"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลดสรุป (CSV)</button></div>';
  bindBar("compliance");$("#pr").onclick=()=>window.print();
  $("#cs").onclick=()=>save("compliance-summary.csv","พารามิเตอร์,ค่าเกณฑ์,เฉลี่ย,ต่ำสุด,สูงสุด,ตัวอย่าง,เกินเกณฑ์,สัดส่วนเกิน(%)\n"+items.map(({k,s})=>[k,csvq(limTxt(k)),fmt(s.mean,2),fmt(s.min,2),fmt(s.max,2),s.n,s.ex,fmt(s.pct,1)].join(",")).join("\n"));
 };

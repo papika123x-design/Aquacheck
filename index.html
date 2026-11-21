@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AquaCheck – คลีนและวิเคราะห์ค่าน้ำเสีย</title>
+<title>MOD CHECK – คลีนและวิเคราะห์ค่าน้ำเสีย</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 <style>
 :root{--bg:#eef2f4;--sf:#fff;--ink:#12303d;--mut:#5d7480;--ln:#d5dfe4;--side:#12303d;--sideink:#cfe3ea;--ac:#0f8b8d;--ok:#1f9d63;--bad:#d9542c;--warn:#b57a0a;--okbg:#e2f4ea;--badbg:#fbe6de;--wbg:#fbf0d4;
@@ -314,17 +314,16 @@ aside a{border-radius:10px}
 </style>
 </head>
 <body>
-<header id="tb"><button id="mn" aria-label="เปิดเมนู" aria-expanded="false">☰ เมนู</button><span id="tbt">AquaCheck</span></header><div id="bd"></div>
+<header id="tb"><button id="mn" aria-label="เปิดเมนู" aria-expanded="false">☰ เมนู</button><span id="tbt">MOD CHECK</span></header><div id="bd"></div>
 <aside>
-<div class="brand">AquaCheck</div><div class="sub">คลีนและวิเคราะห์ค่าน้ำเสีย</div>
+<div class="brand">MOD CHECK</div><div class="sub">คลีนและวิเคราะห์ค่าน้ำเสีย</div>
 <div class="grp">เตรียมข้อมูล</div>
 <a href="#upload" data-r="upload">1. นำเข้าไฟล์</a>
-<a href="#map" data-r="map">2. จับคู่คอลัมน์</a>
-<a href="#clean" data-r="clean">3. ผลการคลีน</a>
-<a href="#standard" data-r="standard">4. เลือกมาตรฐาน</a>
+<a href="#clean" data-r="clean">2. ผลการคลีน</a>
+<a href="#standard" data-r="standard">3. เลือกมาตรฐาน</a>
 <div class="grp">แดชบอร์ด</div>
-<a href="#overview" data-r="overview">5. ภาพรวม</a>
-<a href="#compliance" data-r="compliance">6. สรุป</a>
+<a href="#overview" data-r="overview">4. ภาพรวม</a>
+<a href="#compliance" data-r="compliance">5. สรุป</a>
 <div style="flex:1"></div>
 <button class="ghost" id="theme" style="color:var(--sideink);border-color:#ffffff33">สลับโหมดมืด/สว่าง</button>
 </aside>
@@ -381,14 +380,14 @@ function srcText(k){
  L.push("ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อคัดกรองเบื้องต้น ควรตรวจกับต้นฉบับในราชกิจจานุเบกษาและประกาศฉบับล่าสุด");
  return L.join("\r\n");
 }
-function showSrc(k){save("AquaCheck-reference-"+(k.startsWith("bld")?"bld":k)+".txt",srcText(k))}
+function showSrc(k){save("MOD-CHECK-reference-"+(k.startsWith("bld")?"bld":k)+".txt",srcText(k))}
 function showSrcModal(k){
  const s=srcOf(k),b=k.startsWith("bld"),old=$("#md");if(old)old.remove();
  const m=document.createElement("div");m.id="md";m.className="no-print";
  m.innerHTML=`<div class="card" role="dialog" aria-modal="true"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><b style="font-size:17px">แหล่งอ้างอิง · ${b?"น้ำทิ้งจากอาคาร (ไทย)":S[k].n}</b><button class="ghost" id="mdx">ปิด</button></div>`+(s?`<p><b>${s.t}</b></p><p class="mut">${s.m}</p><p><b>ข้อที่ใช้:</b> ${s.u}</p><p class="mut">${s.x}</p>${b?`<p style="margin-bottom:4px"><b>ตารางจัดประเภทอาคารตามขนาด (ข้อ 4)</b></p>${bldTable()}`:""}`:'<p class="mut">ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีแหล่งอ้างอิงในระบบ</p>')+'<p class="mut">ค่าเกณฑ์ในระบบเป็นค่าอ้างอิงเพื่อคัดกรองเบื้องต้น ควรตรวจกับต้นฉบับในราชกิจจานุเบกษาและประกาศฉบับล่าสุด</p></div>';
  document.body.appendChild(m);const c=()=>m.remove();$("#mdx").onclick=c;m.onclick=e=>{if(e.target===m)c()};
 }
-const st={ss:{},unit:{},tbl:null,map:{},rows:null,rep:null,std:"srf",pm:"DO",f:{site:"",from:"",to:""},sites:[],avail:[],dedupe:true,lod:"half",smooth:true};
+const st={ss:{},unit:{},tbl:null,map:{},rows:null,rep:null,std:"srf",pm:"DO",f:{site:"",from:"",to:""},sites:[],avail:[],dedupe:true,dfmt:"",lod:"half",smooth:true};
 const app=document.getElementById("app"),$=q=>document.querySelector(q);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=(x,d=1)=>x==null||isNaN(x)?"–":(+x).toLocaleString("en",{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -427,6 +426,25 @@ function pd(s,mdy){
  if(mo<1||mo>12||d<1||d>31)return null;
  return {d:y+"-"+pad(mo)+"-"+pad(d),t:pad(h)+":"+pad(mi),ts:Date.UTC(y,mo-1,d,h,mi),be};
 }
+function pdf(s,fmt){
+ s=String(s||"").trim();fmt=String(fmt||"").trim();if(!s||!fmt)return null;
+ const tk=[],re=fmt.replace(/yyyy|yy|MMMM|MMM|MM|M|dd|d|HH|H|hh|h|mm|m|ss|s|[^A-Za-z]+|[A-Za-z]/g,t=>{
+  if(/^[^A-Za-z]+$/.test(t))return t.split(/\s+/).map(x=>x.replace(/[.*+?^${}()|[\]\\\/-]/g,"\\$&")).join("\\s*");
+  const T=t==="yyyy"?"y4":t==="yy"?"y2":/^M{3,4}$/.test(t)?"mn":t[0]==="M"?"mo":/^[dD]/.test(t)?"d":/^[Hh]/.test(t)?"h":t[0]==="m"?"mi":t[0]==="s"?"sec":null;
+  if(!T)return t;tk.push(T);
+  return T==="y4"?"(\\d{4})":T==="mn"?"([A-Za-zก-๙][A-Za-zก-๙.]*)":T==="y2"?"(\\d{2})":"(\\d{1,2})"});
+ let m;try{m=s.match(new RegExp("^\\s*"+re))}catch(e){return null}
+ if(!m)return null;
+ let y=0,mo=0,d=0,h=0,mi=0;
+ tk.forEach((t,i)=>{const v=m[i+1];
+  if(t==="y4")y=+v;else if(t==="y2")y=2000+ +v;else if(t==="mo")mo=+v;
+  else if(t==="mn"){const k=v.replace(/\./g,"").toLowerCase(),j=MON.findIndex(a=>a.some(x=>k===x||(/^[a-z]{3,}$/.test(k)&&x===k.slice(0,3))));mo=j<0?0:j+1}
+  else if(t==="d")d=+v;else if(t==="h")h=+v;else if(t==="mi")mi=+v});
+ const be=y>2400;if(be)y-=543;
+ if(!y||mo<1||mo>12||d<1||d>31||h>23||mi>59)return null;
+ const ts=Date.UTC(y,mo-1,d,h,mi);if(new Date(ts).getUTCDate()!==d)return null;
+ return {d:y+"-"+pad(mo)+"-"+pad(d),t:pad(h)+":"+pad(mi),ts,be};
+}
 function auto(head){
  const M={},used={};
  const set=(f,re)=>{const i=head.findIndex((h,j)=>!used[j]&&re.test(h));if(i>=0){M[f]=i;used[i]=1}else M[f]=-1};
@@ -464,7 +482,7 @@ function runClean(){
   const rn=i+2;
   let ds=M.date>=0?c[M.date]:"";if(M.time>=0&&c[M.time]&&String(ds).indexOf(":")<0)ds+=" "+c[M.time];
   const site0=((M.site>=0&&c[M.site])||"").trim()||"ไม่ระบุ";
-  const p=pd(ds,mdy);
+  const p=(st.dfmt&&pdf(ds,st.dfmt))||pd(ds,mdy);
   if(!p){add("badDate",rn,site0,String(ds||"").trim()||"(ว่าง)","","","ลบแถว","อ่านวันที่ไม่ได้");return}
   if(p.be)be++;
   const o={site:site0,d:p.d,t:p.t,ts:p.ts,r:rn},when=dt(p);let has=false;
@@ -510,9 +528,10 @@ function runClean(){
    a.forEach((o,i)=>{const w=a.slice(Math.max(0,i-3),i+4).map(x=>x[k]),md=med(w),sc=Math.max(1.4826*med(w.map(x=>Math.abs(x-md))),FL[k]);
     if(Math.abs(o[k]-md)>3.5*sc)ch.push([o,Math.round(md*100)/100])});
    ch.forEach(([o,nv])=>{add("spk",o.r,o.site,dt(o),k,o[k],nv,"แทนด้วยค่ากลางของค่าข้างเคียง (ไม่เกิน 7 ค่าของจุดเดียวกัน)");o[k]=nv})}))}
+ if(cn.badDate){const eg=(ex.badDate||[]).slice(0,3).map(e=>"“"+e.d+"”").join(", ");r.hints.push("มี "+cn.badDate.toLocaleString()+" แถวที่อ่านวันที่ไม่ได้ (เช่น "+eg+") กด “ปรับตัวเลือก / นำเข้าไฟล์ใหม่” แล้วกรอกรูปแบบวันที่ของไฟล์ในช่อง “รูปแบบวันที่ในไฟล์” เช่น dd/MM/yyyy HH:mm จากนั้นกด “คลีนไฟล์เดิมซ้ำ” แถวเหล่านี้จะถูกอ่านใหม่ ไม่ต้องลบทิ้ง")}
  r.dup=cn.dup||0;r.badDate=cn.badDate||0;r.empty=cn.empty||0;r.neg=cn.neg||0;
  const ec=out.map(o=>o.EC).filter(v=>v!=null).sort((a,b)=>a-b);
- if(ec.length&&ec[ec.length>>1]<10&&(st.unit.EC||0)==0)r.hints.push("ค่า EC ส่วนใหญ่ต่ำมาก (มัธยฐาน "+fmt(ec[ec.length>>1],2)+") ถ้าไฟล์ใช้หน่วย mS/cm ให้กลับไปเลือกหน่วยที่หน้าจับคู่คอลัมน์");
+ if(ec.length&&ec[ec.length>>1]<10&&(st.unit.EC||0)==0)r.hints.push("ค่า EC ส่วนใหญ่ต่ำมาก (มัธยฐาน "+fmt(ec[ec.length>>1],2)+") ถ้าไฟล์ใช้หน่วย mS/cm ให้ใส่หน่วยในหัวคอลัมน์ เช่น EC (mS/cm)");
  st.rows=out;st.rep=r;st.sites=[...new Set(out.map(o=>o.site))];
  st.avail=K.filter(k=>out.some(o=>o[k]!=null));
  st.f={site:"",from:out.length?out[0].d:"",to:out.length?out[out.length-1].d:""};st.lo=st.f.from;st.hi=st.f.to;
@@ -596,14 +615,17 @@ function bindBar(r){
 }
 const V={};
 V.upload=()=>{
- app.innerHTML=title("นำเข้าไฟล์ค่าน้ำ","อัปโหลดไฟล์ CSV ที่เก็บค่าคุณภาพน้ำ ไม่ว่าจะเก็บมาครบหรือมีแค่บางค่า เช่น DO อย่างเดียว ระบบจะให้คุณจับคู่คอลัมน์เข้ากับเทมเพลตของเราในขั้นต่อไป")+
+ app.innerHTML=title("นำเข้าไฟล์ค่าน้ำ","อัปโหลดไฟล์ CSV ที่เก็บค่าคุณภาพน้ำ ไม่ว่าจะเก็บมาครบหรือมีแค่บางค่า เช่น DO อย่างเดียว ระบบจะจับคู่คอลัมน์ให้อัตโนมัติและคลีนให้ทันที")+
  '<label class="drop" id="dz"><div class="big" style="font-size:21px">ลากไฟล์มาวางที่นี่ หรือกดเพื่อเลือกไฟล์</div><div class="mut" style="margin-top:6px">รองรับ .csv และไฟล์ที่คลีนแล้วตามเทมเพลตของเรา (ไฟล์ Excel ให้บันทึกเป็น CSV ก่อน)</div><input type="file" id="fi" accept=".csv,.txt" hidden></label>'+
  '<div class="foot"><button class="ghost" id="smp">ลองใช้ข้อมูลตัวอย่าง</button><button class="ghost" id="tpl">ดาวน์โหลดเทมเพลต CSV</button><span class="mut">ข้อมูลประมวลผลในเบราว์เซอร์ของคุณเท่านั้น</span></div>'+
+ '<div class="card" style="margin-top:16px"><b>ตัวเลือกการคลีน</b><label style="display:flex;flex-direction:column;gap:4px;margin-top:10px">รูปแบบวันที่ในไฟล์ <span class="mut">(ไม่บังคับ ว่างไว้ = ให้ระบบเดา ปี พ.ศ. แปลงให้อัตโนมัติ)</span><input id="dfm" list="dfl" placeholder="เช่น dd/MM/yyyy HH:mm" value="'+esc(st.dfmt||"")+'"><datalist id="dfl">'+["dd/MM/yyyy","dd/MM/yyyy HH:mm","yyyy-MM-dd","yyyy-MM-dd HH:mm","MM/dd/yyyy","dd-MMM-yyyy","d MMMM yyyy","dd.MM.yy HH:mm"].map(x=>'<option value="'+x+'">').join("")+'</datalist><span class="mut">yyyy ปี · MM เดือน · MMM ชื่อเดือน (ม.ค./Jan) · dd วัน · HH ชั่วโมง · mm นาที</span></label><label style="display:flex;gap:8px;align-items:center;margin-top:12px"><input type="checkbox" id="dd" '+(st.dedupe?"checked":"")+' style="accent-color:var(--ac)">ลบแถวที่ซ้ำกัน (จุดเก็บ เวลา และค่าเหมือนกันทุกช่อง)</label><label style="display:flex;flex-direction:column;gap:4px;margin-top:12px">ค่าต่ำกว่าขีดจำกัดการตรวจวัด (เช่น &lt;0.5, ND, ไม่พบ)<select id="lodsel"><option value="half"'+(st.lod=="half"?" selected":"")+'>แทนด้วยครึ่งหนึ่งของขีดจำกัด (แนะนำ)</option><option value="zero"'+(st.lod=="zero"?" selected":"")+'>แทนด้วย 0</option><option value="skip"'+(st.lod=="skip"?" selected":"")+'>เว้นว่าง (ไม่นำมาคำนวณ)</option></select></label><label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px"><input type="checkbox" id="smo"'+(st.smooth?" checked":"")+' style="margin-top:5px;accent-color:var(--ac)"><span>ปรับค่า pH, DO, BOD, COD ที่พุ่งผิดปกติให้ราบเรียบ (เทียบกับค่าข้างเคียงของจุดเดียวกัน) <span class="mut">เก็บค่าเดิมไว้ในรายงานการคลีน แต่อาจทำให้ผลเทียบเกณฑ์เปลี่ยน ปิดได้ถ้าต้องการใช้ค่าจริง</span></span></label>'+(st.tbl?'<div class="foot"><button id="rr">คลีนไฟล์เดิมซ้ำด้วยตัวเลือกนี้ ('+esc(st.fn)+')</button></div>':'')+'</div>'+
  '<div class="card wrap" style="margin-top:20px"><b>เทมเพลตของเรา</b><span class="mut"> ชื่อข้อมูล, วันที่ (วัน/เดือน/ปี) แล้วตามด้วยค่าพารามิเตอร์ ใส่เฉพาะที่มีก็ได้</span><table style="margin-top:8px"><tr><th>ชื่อข้อมูล</th><th>วันที่</th>'+K.map(k=>`<th>${k}</th>`).join("")+'</tr><tr><td>สถานีสำแล</td><td>19/11/2026 12:00</td><td>7.4</td><td>3.6</td><td>850</td><td colspan="9" class="mut">…</td></tr></table></div>';
+ $("#dfm").oninput=e=>{st.dfmt=e.target.value};$("#dd").onchange=e=>{st.dedupe=e.target.checked};$("#lodsel").onchange=e=>{st.lod=e.target.value};$("#smo").onchange=e=>{st.smooth=e.target.checked};
+ {const rr=$("#rr");if(rr)rr.onclick=()=>{runClean();go("clean")}}
  const load=f=>{const r=new FileReader();r.onload=()=>{const b=r.result;let t=new TextDecoder("utf-8").decode(b);
   if(t.indexOf("\uFFFD")>=0){try{t=new TextDecoder("windows-874").decode(b)}catch(e){}}
   const tb=parseTable(t);if(!tb||!tb.rows.length){alert("ไม่พบข้อมูลในไฟล์นี้");return}
-  st.tbl=tb;st.fn=f.name;st.map=auto(tb.head);st.rows=null;if(st.map.date>=0&&K.some(k=>st.map[k]>=0)){runClean();go("clean")}else go("map")};r.readAsArrayBuffer(f)};
+  st.tbl=tb;st.fn=f.name;st.map=auto(tb.head);st.rows=null;if(st.map.date>=0&&K.some(k=>st.map[k]>=0)){runClean();go("clean")}else alert("อ่านไฟล์ไม่ได้: ไม่พบคอลัมน์วันที่ หรือไม่พบคอลัมน์ค่าพารามิเตอร์ (pH, DO, BOD, COD ฯลฯ)\nตรวจว่าหัวคอลัมน์ตรงกับเทมเพลต (ดาวน์โหลดเทมเพลต CSV ได้ที่หน้านี้)")};r.readAsArrayBuffer(f)};
  $("#fi").onchange=e=>{if(e.target.files[0])load(e.target.files[0])};
  const dz=$("#dz");dz.ondragover=e=>e.preventDefault();dz.ondrop=e=>{e.preventDefault();if(e.dataTransfer.files[0])load(e.dataTransfer.files[0])};
  $("#smp").onclick=()=>{
@@ -614,22 +636,7 @@ V.upload=()=>{
     rows.push(row);if(R()<.07)rows.push(row.slice())});
    rows.push(["",dt+" 12:00","","","","","","",""])}
   st.tbl={head:["ชื่อข้อมูล","วันที่","pH","DO","EC","BOD","COD","TSS","TDS"],rows,dl:","};st.fn="ข้อมูลตัวอย่าง";st.map=auto(st.tbl.head);runClean();go("clean")};
- $("#tpl").onclick=()=>save("template-aquacheck.csv","ชื่อข้อมูล,วันที่,"+K.join(",")+"\n"+["สถานีตัวอย่าง","19/11/2026 12:00","7.4","3.6","850"].concat(Array(K.length-3).fill("")).join(",")+"\n");
-};
-V.map=()=>{
- const T=st.tbl,M=st.map;
- const fields=[["date","วันที่ (คอลัมน์วันที่-เวลารวมกันได้)"]].concat(M.time>=0?[["time","เวลา (คอลัมน์แยก)"]]:[],[["site","ชื่อข้อมูล / สถานี"]]).concat(K.map(k=>[k,`${P[k].n} (${k}${P[k].u?", "+P[k].u:""})`]));
- app.innerHTML=title("จับคู่คอลัมน์เข้ากับเทมเพลต",`ไฟล์ ${esc(st.fn)}: ${T.rows.length.toLocaleString()} แถว ${T.head.length} คอลัมน์ ระบบเดาให้แล้ว ตรวจและแก้ได้ ค่าที่ไม่มีในไฟล์ให้เลือก “ไม่มีในไฟล์” และเลือกหน่วยที่ไฟล์ใช้ ระบบจะแปลงเป็นหน่วยมาตรฐานให้`)+
- '<div class="row c2" style="align-items:start"><div class="card" id="mp"></div><div class="card wrap"><b>ตัวอย่างข้อมูลดิบ 5 แถวแรก</b><table style="margin-top:8px"><tr>'+T.head.map(h=>`<th>${esc(h)}</th>`).join("")+'</tr>'+T.rows.slice(0,5).map(r=>'<tr>'+T.head.map((h,i)=>`<td>${esc(r[i]||"")}</td>`).join("")+'</tr>').join("")+'</table></div></div>'+
- '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="dd" '+(st.dedupe?"checked":"")+' style="accent-color:var(--ac)">ลบแถวที่ซ้ำกัน (จุดเก็บ เวลา และค่าเหมือนกันทุกช่อง)</label><div class="card" style="margin-top:12px"><b>ตัวเลือกการคลีนเพิ่มเติม</b><label style="display:flex;flex-direction:column;gap:4px;margin-top:10px">ค่าต่ำกว่าขีดจำกัดการตรวจวัด (เช่น &lt;0.5, ND, ไม่พบ)<select id="lodsel"><option value="half"'+(st.lod=="half"?" selected":"")+'>แทนด้วยครึ่งหนึ่งของขีดจำกัด (แนะนำ)</option><option value="zero"'+(st.lod=="zero"?" selected":"")+'>แทนด้วย 0</option><option value="skip"'+(st.lod=="skip"?" selected":"")+'>เว้นว่าง (ไม่นำมาคำนวณ)</option></select></label><label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px"><input type="checkbox" id="smo"'+(st.smooth?" checked":"")+' style="margin-top:5px;accent-color:var(--ac)"><span>ปรับค่า pH, DO, BOD, COD ที่พุ่งผิดปกติให้ราบเรียบ (เทียบกับค่าข้างเคียงของจุดเดียวกัน) <span class="mut">เก็บค่าเดิมไว้ในรายงานการคลีน แต่อาจทำให้ผลเทียบเกณฑ์เปลี่ยน ปิดได้ถ้าต้องการใช้ค่าจริง</span></span></label></div><div class="foot"><button id="go">คลีนข้อมูล</button><span class="err" id="er"></span></div>';
-$("#mp").innerHTML=fields.map(([f,t])=>`<div class="mrow"><span>${t}</span><div style="display:flex;gap:6px;min-width:0"><select data-f="${f}" style="flex:1;min-width:0"><option value="-1">— ไม่มีในไฟล์ —</option>${T.head.map((h,i)=>`<option value="${i}"${M[f]==i?" selected":""}>${esc(h||"(ไม่มีชื่อ)")}</option>`).join("")}</select>${UN[f]?`<select data-u="${f}" title="หน่วยในไฟล์" style="flex:none;width:130px">${UN[f].map((u,i)=>`<option value="${i}"${(st.unit[f]||0)==i?" selected":""}>${u[0]}</option>`).join("")}</select>`:""}</div></div>`).join("");
- document.querySelectorAll("#mp select[data-f]").forEach(s=>s.onchange=()=>{M[s.dataset.f]=+s.value});
- document.querySelectorAll("#mp select[data-u]").forEach(s=>s.onchange=()=>{st.unit[s.dataset.u]=+s.value});
-  $("#dd").onchange=e=>{st.dedupe=e.target.checked};$("#lodsel").onchange=e=>{st.lod=e.target.value};$("#smo").onchange=e=>{st.smooth=e.target.checked};
- $("#go").onclick=()=>{
-  if(!(M.date>=0)){$("#er").textContent="กรุณาเลือกคอลัมน์วันที่";return}
-  if(!K.some(k=>M[k]>=0)){$("#er").textContent="กรุณาจับคู่ค่าพารามิเตอร์อย่างน้อย 1 ค่า";return}
-  runClean();go("clean")};
+ $("#tpl").onclick=()=>save("template-modcheck.csv","ชื่อข้อมูล,วันที่,"+K.join(",")+"\n"+["สถานีตัวอย่าง","19/11/2026 12:00","7.4","3.6","850"].concat(Array(K.length-3).fill("")).join(",")+"\n");
 };
 const mapTxt=()=>{const M=st.map,h=st.tbl.head,a=[];if(M.date>=0)a.push(`${h[M.date]} → วันที่`);if(M.site>=0)a.push(`${h[M.site]} → ชื่อข้อมูล`);K.forEach(k=>{if(M[k]>=0)a.push(h[M[k]]===k?k:`${h[M[k]]} → ${k}`)});return esc(a.join(", "))};
 const issuesHtml=()=>{
@@ -651,7 +658,7 @@ const logHtml=()=>{
  return '<div class="card" style="margin-bottom:16px"><b>สิ่งที่ตรวจพบและสิ่งที่คลีน</b> <span class="mut">กดหัวข้อเพื่อดูตัวอย่าง (สูงสุด 8 รายการ) · รายการทั้งหมดอยู่ในรายงานการคลีน (CSV)</span>'+
   r.notes.map(n=>`<p class="mut" style="margin:8px 0 0">${esc(n)}</p>`).join("")+
   codes.map(c=>`<details style="margin-top:10px"><summary style="cursor:pointer"><b>${LGL[c]}</b> — ${r.cn[c].toLocaleString()} รายการ</summary><div class="wrap" style="margin-top:6px"><table>${th(["แถวในไฟล์","จุดตรวจวัด","วันที่","พารามิเตอร์","ค่าเดิม","หลังคลีน","หมายเหตุ"])}${r.ex[c].map(e=>`<tr><td>${e.row}</td><td>${esc(e.site||"–")}</td><td>${esc(e.d||"–")}</td><td>${e.k?`<b>${e.k}</b>`:"–"}</td><td>${cell(e.from)}</td><td>${cell(e.to)}</td><td style="white-space:normal;min-width:200px">${esc(e.note||"")}</td></tr>`).join("")}</table></div>${r.cn[c]>8?`<p class="mut" style="margin:6px 0 0">และอีก ${(r.cn[c]-8).toLocaleString()} รายการ</p>`:""}</details>`).join("")+
-  (r.cn.spk?'<p class="mut" style="margin:12px 0 0">หมายเหตุ: ค่าที่ปรับให้ราบเรียบอาจทำให้ผลเทียบเกณฑ์เปลี่ยน ตรวจค่าเดิมในรายงานก่อนใช้งานจริง หรือปิดตัวเลือกนี้ที่หน้าจับคู่คอลัมน์</p>':"")+'</div>'+cons;
+  (r.cn.spk?'<p class="mut" style="margin:12px 0 0">หมายเหตุ: ค่าที่ปรับให้ราบเรียบอาจทำให้ผลเทียบเกณฑ์เปลี่ยน ตรวจค่าเดิมในรายงานก่อนใช้งานจริง หรือปิดตัวเลือกนี้ที่หน้านำเข้าไฟล์</p>':"")+'</div>'+cons;
 };
 V.clean=()=>{
  const r=st.rep,it=(l,v,w)=>`<div class="card"><div class="mut">${l}</div><div class="big" style="color:${w&&v>0?"var(--warn)":"var(--ink)"}">${v.toLocaleString()}</div></div>`;
@@ -663,9 +670,9 @@ V.clean=()=>{
  cl3+(r.kept?logHtml()+issuesHtml():"")+
  (r.kept?`
  <div class="card wrap" style="margin-top:16px"><b>ไฟล์ที่คลีนแล้ว (10 แถวแรก)</b><span class="mut"> จัดเป็นเทมเพลตเดียวกัน ช่องที่ไม่มีในไฟล์เว้นว่างไว้</span><table style="margin-top:8px"><tr><th>ชื่อข้อมูล</th><th>วันที่</th>${cols.map(k=>`<th>${k}</th>`).join("")}</tr>${st.rows.slice(0,10).map(o=>`<tr><td>${esc(o.site)}</td><td>${dmy(o.d)}${any?" "+o.t:""}</td>${cols.map(k=>`<td>${o[k]==null?"":fmt(o[k],k=="pH"?2:1)}</td>`).join("")}</tr>`).join("")}</table></div>
- <div class="foot"><button id="nx">เลือกมาตรฐานอ้างอิง</button><button class="ghost" id="dl">ดาวน์โหลดไฟล์ที่คลีนแล้ว (CSV)</button><button class="ghost" id="dlg">ดาวน์โหลดรายงานการคลีน (CSV)</button><button class="ghost" id="bk">แก้การจับคู่คอลัมน์</button></div>`
- :`<div class="alert"><b>ไม่พบแถวที่ใช้ได้</b><div>ส่วนใหญ่เกิดจากเลือกคอลัมน์วันที่ผิด หรือรูปแบบวันที่ที่อ่านไม่ได้ (รองรับ 2026-11-19, 19/11/2026, 1 ม.ค. 2566 และปี พ.ศ.) กลับไปตรวจการจับคู่คอลัมน์อีกครั้ง</div></div><div class="foot"><button id="bk">แก้การจับคู่คอลัมน์</button></div>`);
- $("#bk").onclick=()=>go("map");
+ <div class="foot"><button id="nx">เลือกมาตรฐานอ้างอิง</button><button class="ghost" id="dl">ดาวน์โหลดไฟล์ที่คลีนแล้ว (CSV)</button><button class="ghost" id="dlg">ดาวน์โหลดรายงานการคลีน (CSV)</button><button class="ghost" id="bk">ปรับตัวเลือก / นำเข้าไฟล์ใหม่</button></div>`
+ :`<div class="alert"><b>ไม่พบแถวที่ใช้ได้</b><div>ส่วนใหญ่เกิดจากเลือกคอลัมน์วันที่ผิด หรือรูปแบบวันที่ที่อ่านไม่ได้ (รองรับ 2026-11-19, 19/11/2026, 1 ม.ค. 2566 และปี พ.ศ.) กลับไปตรวจรูปแบบวันที่ที่หน้านำเข้าไฟล์อีกครั้ง</div></div><div class="foot"><button id="bk">ปรับตัวเลือก / นำเข้าไฟล์ใหม่</button></div>`);
+ $("#bk").onclick=()=>go("upload");
  if(r.kept){$("#nx").onclick=()=>go("standard");
   $("#dlg").onclick=()=>save("cleaning-report-"+st.fn.replace(/\.[^.]+$/,"")+".csv","ประเภท,แถวในไฟล์,ชื่อข้อมูล,วันที่,พารามิเตอร์,ค่าเดิม,ค่าหลังคลีน,หมายเหตุ\n"+r.log.map(e=>[LGL[e.c],e.row,e.site,e.d,e.k,e.from,e.to,e.note].map(x=>csvq(String(x==null?"":x))).join(",")).join("\n"));
   $("#dl").onclick=()=>save("cleaned-"+st.fn.replace(/\.[^.]+$/,"")+".csv","ชื่อข้อมูล,วันที่,"+cols.join(",")+"\n"+st.rows.map(o=>[csvq(o.site),dmy(o.d)+(any?" "+o.t:"")].concat(cols.map(k=>o[k]==null?"":o[k])).join(",")).join("\n"))}
@@ -762,7 +769,7 @@ function figMean(rowsF){
 const loadX=()=>window.ExcelJS?Promise.resolve():new Promise((ok,no)=>{const e=document.createElement("script");e.src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js";e.onload=ok;e.onerror=()=>no(new Error("load"));document.head.appendChild(e)});
 async function exportReport(xlsx){
  const rows=view(),items=st.avail.map(k=>({k,s:stats(k,rows)})).filter(x=>x.s);
- const hdr=["รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน - AquaCheck","มาตรฐานอ้างอิง: "+stdLabel(),"จุดตรวจวัด: "+(st.f.site||"ทุกจุดตรวจวัด ("+st.sites.length+" สถานี)"),"ช่วงวันที่: "+dmy(st.f.from)+" ถึง "+dmy(st.f.to)];
+ const hdr=["รายงานผลการตรวจวัดคุณภาพน้ำเทียบเกณฑ์มาตรฐาน - MOD CHECK","มาตรฐานอ้างอิง: "+stdLabel(),"จุดตรวจวัด: "+(st.f.site||"ทุกจุดตรวจวัด ("+st.sites.length+" สถานี)"),"ช่วงวันที่: "+dmy(st.f.from)+" ถึง "+dmy(st.f.to)];
  const T=[{n:"สรุปพารามิเตอร์",c:[["พารามิเตอร์","t"],["ชื่อ","t"],["ค่าเกณฑ์ (หน่วยตามมาตรฐาน)","t"],["เฉลี่ย","n"],["ต่ำสุด","n"],["สูงสุด","n"],["ตัวอย่าง","i"],["เกินเกณฑ์ (ครั้ง)","i"],["สัดส่วนเกิน (%)","p"],["สถานะ","s"]],
   r:items.map(({k,s})=>[k,P[k].n,limTxt(k),s.mean,s.min,s.max,s.n,anyLim(k)?s.ex:null,anyLim(k)?s.pct:null,!anyLim(k)?"ไม่มีเกณฑ์":s.ex?"เกินเกณฑ์":"ผ่านทุกค่า"])}];
  if(st.sites.length>1){
@@ -772,9 +779,9 @@ async function exportReport(xlsx){
    r:st.sites.map(si=>{const rs=rows.filter(o=>o.site==si);return [si,S[stdOf(si)].n].concat(st.avail.map(k=>{const t=stats(k,rs);return t?t.mean:null}))})});
  }
  const FM={n:"#,##0.00",i:"#,##0",p:"0.0"},txt=(v,ty)=>v==null?"":typeof v=="number"?(ty=="i"?v.toLocaleString("en"):fmt(v,ty=="p"?1:2)):String(v);
- if(!xlsx){const t=T[0];save("AquaCheck-summary.csv",hdr.map(csvq).join("\n")+"\n\n"+t.c.map(c=>csvq(c[0])).join(",")+"\n"+t.r.map(r=>r.map((v,j)=>csvq(txt(v,t.c[j][1]))).join(",")).join("\n"));return}
+ if(!xlsx){const t=T[0];save("MOD-CHECK-summary.csv",hdr.map(csvq).join("\n")+"\n\n"+t.c.map(c=>csvq(c[0])).join(",")+"\n"+t.r.map(r=>r.map((v,j)=>csvq(txt(v,t.c[j][1]))).join(",")).join("\n"));return}
  await loadX();
- const wb=new ExcelJS.Workbook();wb.creator="AquaCheck";
+ const wb=new ExcelJS.Workbook();wb.creator="MOD CHECK";
  const B={top:{style:"thin",color:{argb:"FFCBD5E1"}},left:{style:"thin",color:{argb:"FFCBD5E1"}},bottom:{style:"thin",color:{argb:"FFCBD5E1"}},right:{style:"thin",color:{argb:"FFCBD5E1"}}};
  const SF={"ผ่านทุกค่า":"FFE2F4EA","เกินเกณฑ์":"FFFBE6DE","ไม่มีเกณฑ์":"FFEEF2F4"};
  T.forEach(t=>{
@@ -789,7 +796,7 @@ async function exportReport(xlsx){
   ws.views=[{state:"frozen",ySplit:hr}];
  });
  const buf=await wb.xlsx.writeBuffer();
- const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));a.download="AquaCheck-summary.xlsx";document.body.appendChild(a);a.click();a.remove();
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));a.download="MOD-CHECK-summary.xlsx";document.body.appendChild(a);a.click();a.remove();
 }
 const THM=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 const thd=d=>(+d.slice(8,10))+" "+THM[+d.slice(5,7)-1]+" "+(+d.slice(0,4)+543);
@@ -876,22 +883,22 @@ V.compliance=()=>{
  const nt=`<div class="card cd-card span2"><h3>หมายเหตุข้อกำหนดและข้อจำกัด</h3><ol>${notes.map(n=>`<li>${n}</li>`).join("")}</ol></div>`;
  const rf=`<div class="card cd-card span2"><h3>เอกสารอ้างอิง</h3>${usedSrc.length?`<ol>${usedSrc.map(k=>`<li><a href="${esc(SRC[k].url)}" target="_blank" rel="noopener noreferrer" style="color:var(--ac);font-weight:600;text-decoration:underline">${esc(SRC[k].t)} ↗</a><span class="mut" style="display:block">${esc(SRC[k].m)}</span></li>`).join("")}</ol>`:'<div class="mut">ค่าเกณฑ์ที่ผู้ใช้กำหนดเอง ไม่มีเอกสารอ้างอิงในระบบ</div>'}</div>`;
  const s6=`<section class="cd-sec"><h2>ข้อมูลประกอบรายงาน</h2><div class="cd-2">${nt}${rf}</div></section>`;
- const head=`<header class="cd-head"><div><div class="cd-org">AquaCheck · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><h1 class="cd-title">รายงานผลการตรวจวัดและประเมินคุณภาพน้ำเชิงสิ่งแวดล้อม</h1><div class="cd-docno">เลขที่รายงาน ${docNo} · ออกรายงาน ${thd(iso)} เวลา <span style="white-space:nowrap">${hm} น.</span></div></div><div class="cd-tools no-print"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลด Excel (.xlsx)</button></div></header>
+ const head=`<header class="cd-head"><div><div class="cd-org">MOD CHECK · ระบบตรวจสอบและวิเคราะห์คุณภาพน้ำ</div><h1 class="cd-title">รายงานผลการตรวจวัดและประเมินคุณภาพน้ำเชิงสิ่งแวดล้อม</h1><div class="cd-docno">เลขที่รายงาน ${docNo} · ออกรายงาน ${thd(iso)} เวลา <span style="white-space:nowrap">${hm} น.</span></div></div><div class="cd-tools no-print"><button id="pr">พิมพ์ / บันทึกเป็น PDF</button><button class="ghost" id="cs">ดาวน์โหลด Excel (.xlsx)</button></div></header>
   <div class="card cd-meta"><div><b>แหล่งข้อมูล</b><span>${esc(st.fn||"-")}</span></div><div><b>จุดตรวจวัด</b><span>${siteLabel}</span></div><div><b>ช่วงวันที่</b><span>${thd(st.f.from)} ถึง ${thd(st.f.to)}</span></div><div><b>มาตรฐานอ้างอิง</b><span>${esc(stdTxt)}</span></div></div>`;
  const kpi=[["จำนวนตัวอย่าง",rows.length.toLocaleString(),""],["พารามิเตอร์ที่มีเกณฑ์",`${limited.length}<small> / ${items.length} ที่ตรวจวัด</small>`,""],["พารามิเตอร์ที่เกินเกณฑ์",badItems.length,badItems.length?"bad":""],["สัดส่วนค่าที่เกินเกณฑ์รวม",totN?fmt(totE/totN*100,1)+"%":"–",totE?"bad":""]];
  const verdict=`<div class="cd-verdict ${vk}" role="status"><div class="cd-vi" aria-hidden="true">${vi}</div><div><div class="cd-vl">${vl}</div><div class="cd-vt">${vt}</div></div></div><div class="cd-kpi">${kpi.map(([t,v,c])=>`<div><div class="${c}"><div class="v">${v}</div></div><div class="t">${t}</div></div>`).join("")}</div>`;
  const find=`<section class="cd-sec"><h2>สรุปประเด็นสำคัญเชิงสิ่งแวดล้อม (Key Environmental Findings)</h2><div class="card cd-find"><ul>${fd.map(x=>`<li>${x}</li>`).join("")}</ul></div></section>`;
- app.innerHTML=bar()+`<article class="cd">${head}${verdict}${find}${s3}${s4}${s5}${s6}<div class="cd-foot">จัดทำโดยระบบ AquaCheck · เลขที่รายงาน ${docNo}</div></article>`;
+ app.innerHTML=bar()+`<article class="cd">${head}${verdict}${find}${s3}${s4}${s5}${s6}<div class="cd-foot">จัดทำโดยระบบ MOD CHECK · เลขที่รายงาน ${docNo}</div></article>`;
  bindBar("compliance");$("#pr").onclick=()=>window.print();
  $("#cs").onclick=async()=>{const b=$("#cs"),t=b.textContent;b.textContent="กำลังสร้างไฟล์…";b.disabled=true;try{await exportReport(true)}catch(e){await exportReport(false);alert("สร้างไฟล์ .xlsx ไม่ได้ (ต้องต่ออินเทอร์เน็ตเพื่อโหลดไลบรารี) จึงดาวน์โหลดเป็น CSV แทน")}b.textContent=t;b.disabled=false};
 };
-const ready=r=>r=="upload"||(r=="map"?!!st.tbl:r=="clean"?!!st.rows:!!(st.rows&&st.rows.length));
+const ready=r=>r=="upload"||(r=="clean"?!!st.rows:!!(st.rows&&st.rows.length));
 function go(r){if(location.hash.slice(1)==r)render();else location.hash=r}
 function render(){
  let r=location.hash.slice(1);if(!V[r])r="upload";
- if(!ready(r))r=st.tbl?"map":"upload";
+ if(!ready(r))r="upload";
  const nv=()=>document.querySelectorAll("aside a").forEach(a=>{a.classList.toggle("on",a.dataset.r==(r=="trends"?"overview":r));a.classList.toggle("dis",!ready(a.dataset.r))});nv();
- dr(false);{const ac=document.querySelector("aside a.on");$("#tbt").textContent=ac?ac.textContent:"AquaCheck"}
+ dr(false);{const ac=document.querySelector("aside a.on");$("#tbt").textContent=ac?ac.textContent:"MOD CHECK"}
  try{V[r]();window.scrollTo(0,0)}catch(e){app.innerHTML='<div class="alert"><b>แสดงหน้านี้ไม่สำเร็จ</b><div>'+esc(e.message)+'</div><div class="foot"><button id="rs">กลับไปหน้านำเข้าไฟล์</button></div></div>';$("#rs").onclick=()=>go("upload")}
  nv();
 }
